@@ -9,10 +9,14 @@
                 <p class="text-uppercase text-muted small mb-1">Formación especializada</p>
                 <h2 class="fw-bold mb-0">Cursos disponibles</h2>
             </div>
-            <a href="{{ route('courses.create') }}" class="btn btn-outline-primary btn-sm d-none d-lg-inline-flex"
-               style="color:#1e40af; border-color:#1e40af;" @cannot('create', App\Models\Course::class) disabled @endcannot>
-                Crear nuevo curso
-            </a>
+            @auth
+                @if (auth()->user()->role === 'admin')
+                    <a href="{{ route('admin.courses.create') }}" class="btn btn-outline-primary btn-sm d-none d-lg-inline-flex"
+                       style="color:#1e40af; border-color:#1e40af;">
+                        Crear nuevo curso
+                    </a>
+                @endif
+            @endauth
         </div>
     </div>
 

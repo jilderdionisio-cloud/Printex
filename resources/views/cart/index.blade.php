@@ -108,7 +108,7 @@
                 </div>
 
                 <a href="{{ route('checkout.index') }}" class="btn btn-primary w-100" style="background-color:#1e40af;"
-                   @if (empty($cartItems)) disabled @endif>
+                   @if (($cartItems ?? collect())->isEmpty()) disabled @endif>
                     Proceder al pago
                 </a>
 

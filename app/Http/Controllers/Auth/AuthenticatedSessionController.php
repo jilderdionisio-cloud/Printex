@@ -11,11 +11,17 @@ use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
+    /**
+     * Mostrar formulario de login.
+     */
     public function create(): View
     {
         return view('auth.login');
     }
 
+    /**
+     * Procesar el inicio de sesion.
+     */
     public function store(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
@@ -23,10 +29,15 @@ class AuthenticatedSessionController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        if (!Auth::attempt($credentials, $request->boolean('remember'))) {
-            return back()->withErrors([
-                'email' => 'Las credenciales no son válidas.',
-            ])->onlyInput('email');
+        $credentials['email'] = strtolower(trim($credentials['email']));
+
+        if (! Auth::attempt([
+            'email' => $credentials['email'],
+            'password' => $credentials['password'],
+        ], $request->boolean('remember'))) {
+            return back()
+                ->withErrors(['email' => 'Las credenciales no son validas.'])
+                ->onlyInput('email');
         }
 
         $request->session()->regenerate();
@@ -34,9 +45,12 @@ class AuthenticatedSessionController extends Controller
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 
+    /**
+     * Cerrar sesion.
+     */
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard()->logout();
+        Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
