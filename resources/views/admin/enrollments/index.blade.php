@@ -56,9 +56,10 @@
                                     <div class="small">{{ $enrollment->student_phone ?? $enrollment->user->phone }}</div>
                                 </td>
                                 <td class="text-end">
-                                    <button class="btn btn-sm btn-outline-secondary" type="button">
+                                    <a href="{{ route('admin.enrollments.show', $enrollment->id) }}"
+                                       class="btn btn-sm btn-primary">
                                         Ver detalle
-                                    </button>
+                                    </a>
                                 </td>
                             </tr>
                         @empty

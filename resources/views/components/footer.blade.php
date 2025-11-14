@@ -14,7 +14,7 @@
                     <li><a class="text-light text-decoration-none" href="{{ url('/') }}">Inicio</a></li>
                     <li><a class="text-light text-decoration-none" href="{{ route('products.index') }}">Productos</a></li>
                     <li><a class="text-light text-decoration-none" href="{{ route('courses.index') }}">Cursos</a></li>
-                    <li><a class="text-light text-decoration-none" href="{{ url('/about') }}">Nosotros</a></li>
+                    <li><a class="text-light text-decoration-none" href="{{ route('about') }}">Nosotros</a></li>
                     <li><a class="text-light text-decoration-none" href="{{ route('contact') }}">Contacto</a></li>
                 </ul>
             </div>

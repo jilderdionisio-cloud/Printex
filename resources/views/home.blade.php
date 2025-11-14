@@ -68,37 +68,44 @@
             </a>
         </div>
         <div class="row g-4">
-            @foreach ([
-                ['name' => 'Tinta Sublimática EPSON 1L', 'price' => 'S/ 89.90', 'category' => 'Tintas'],
-                ['name' => 'Plancha Transfer 38x38cm', 'price' => 'S/ 1,850.00', 'category' => 'Maquinaria'],
-                ['name' => 'Papel Transfer A4 (100 hojas)', 'price' => 'S/ 45.00', 'category' => 'Papeles'],
-                ['name' => 'Vinilo Textil Blanco Rollo 50cm', 'price' => 'S/ 65.00', 'category' => 'Vinilo'],
-                ['name' => 'Prensa Térmica 5 en 1', 'price' => 'S/ 2,350.00', 'category' => 'Maquinaria'],
-                ['name' => 'Marco Serigráfico 40x50cm', 'price' => 'S/ 120.00', 'category' => 'Serigrafía'],
-            ] as $product)
+            @forelse ($products as $product)
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="ratio ratio-16x9 bg-light rounded-top" style="background-color:#e5e7eb;">
-                            <div class="d-flex justify-content-center align-items-center text-muted">
-                                Imagen producto
-                            </div>
+                            @if ($product->image)
+                                <img src="{{ $product->image }}" alt="{{ $product->name }}" class="rounded-top object-fit-cover">
+                            @else
+                                <div class="d-flex justify-content-center align-items-center text-muted">
+                                    Imagen producto
+                                </div>
+                            @endif
                         </div>
-                        <div class="card-body">
+                        <div class="card-body d-flex flex-column">
                             <span class="badge rounded-pill text-bg-light text-primary mb-2" style="color:#1e40af !important;">
-                                {{ $product['category'] }}
+                                {{ $product->category->name ?? 'General' }}
                             </span>
-                            <h5 class="card-title">{{ $product['name'] }}</h5>
+                            <h5 class="card-title">{{ $product->name }}</h5>
                             <p class="card-text fw-semibold text-primary" style="color:#1e40af !important;">
-                                {{ $product['price'] }}
+                                S/ {{ number_format($product->price, 2) }}
                             </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <button class="btn btn-sm btn-primary" style="background-color:#1e40af;">Añadir al carrito</button>
-                                <a href="{{ route('products.index') }}" class="text-decoration-none text-muted small">Ver detalle</a>
+                            <div class="d-flex justify-content-between align-items-center mt-auto">
+                                <form method="POST" action="{{ route('cart.add') }}">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <button class="btn btn-sm btn-primary" style="background-color:#1e40af;">
+                                        Añadir al carrito
+                                    </button>
+                                </form>
+                                <a href="{{ route('products.show', $product->id) }}" class="text-decoration-none text-muted small">
+                                    Ver detalle
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
-            @endforeach
+            @empty
+                <p class="text-muted">Pronto publicaremos productos destacados.</p>
+            @endforelse
         </div>
     </section>
 
@@ -114,25 +121,26 @@
             </a>
         </div>
         <div class="row g-4">
-            @foreach ([
-                ['name' => 'Curso Básico de Sublimación', 'price' => 'S/ 350.00', 'duration' => '4 semanas', 'modality' => 'Presencial'],
-                ['name' => 'Curso Avanzado de Serigrafía', 'price' => 'S/ 450.00', 'duration' => '6 semanas', 'modality' => 'Presencial'],
-                ['name' => 'Curso Transfer y Estampado Textil', 'price' => 'S/ 400.00', 'duration' => '5 semanas', 'modality' => 'Híbrido'],
-            ] as $course)
+            @forelse ($courses as $course)
                 <div class="col-12 col-lg-4">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="card-body">
-                            <span class="badge text-bg-warning text-dark mb-2" style="background-color:#f59e0b !important;">{{ $course['modality'] }}</span>
-                            <h5 class="card-title">{{ $course['name'] }}</h5>
-                            <p class="text-muted mb-1"><strong>Duración:</strong> {{ $course['duration'] }}</p>
-                            <p class="text-primary fw-bold" style="color:#1e40af !important;">{{ $course['price'] }}</p>
-                            <button class="btn btn-outline-primary btn-sm" style="border-color:#1e40af; color:#1e40af;">
+                            <span class="badge text-bg-warning text-dark mb-2" style="background-color:#f59e0b !important;">
+                                {{ $course->modality }}
+                            </span>
+                            <h5 class="card-title">{{ $course->name }}</h5>
+                            <p class="text-muted mb-1"><strong>Duración:</strong> {{ $course->duration }}</p>
+                            <p class="text-primary fw-bold" style="color:#1e40af !important;">S/ {{ number_format($course->price, 2) }}</p>
+                            <a href="{{ route('courses.show', $course->id) }}" class="btn btn-outline-primary btn-sm"
+                               style="border-color:#1e40af; color:#1e40af;">
                                 Ver detalles
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
-            @endforeach
+            @empty
+                <p class="text-muted">Pronto publicaremos nuevos cursos.</p>
+            @endforelse
         </div>
     </section>
 

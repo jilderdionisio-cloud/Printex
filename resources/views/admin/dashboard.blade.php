@@ -11,8 +11,8 @@
     <div class="row g-4 mb-4">
         @foreach ([
             ['label' => 'Total ventas', 'value' => 'S/ ' . number_format($metrics['sales'] ?? 0, 2), 'icon' => 'bi-currency-dollar', 'text' => '+12% mensual'],
-            ['label' => 'Pedidos pendientes', 'value' => $metrics['pending_orders'] ?? 0, 'icon' => 'bi-bag', 'text' => 'Necesitan revisión'],
-            ['label' => 'Cursos activos', 'value' => $metrics['active_courses'] ?? 0, 'icon' => 'bi-journal-richtext', 'text' => 'Más populares visibles'],
+            ['label' => 'Pedidos pendientes', 'value' => $metrics['pending_orders'] ?? 0, 'icon' => 'bi-bag', 'text' => 'Necesitan revisi&oacute;n'],
+            ['label' => 'Cursos activos', 'value' => $metrics['active_courses'] ?? 0, 'icon' => 'bi-journal-richtext', 'text' => 'M&aacute;s populares visibles'],
             ['label' => 'Nuevos usuarios', 'value' => $metrics['new_users'] ?? 0, 'icon' => 'bi-people', 'text' => 'Últimos 30 días'],
         ] as $card)
             <div class="col-12 col-md-6 col-xl-3">
@@ -54,8 +54,8 @@
                     <ul class="list-group list-group-flush">
                         @forelse ($popularCourses ?? [] as $course)
                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <span>{{ $course['name'] }}</span>
-                                <span class="badge text-bg-primary">{{ $course['enrollments'] }} inscripciones</span>
+                                <span>{{ $course->name }}</span>
+                                <span class="badge text-bg-primary">{{ $course->enrollments_count }} inscripciones</span>
                             </li>
                         @empty
                             <li class="list-group-item text-muted">Aún no hay datos disponibles.</li>
@@ -74,3 +74,5 @@
         </div>
     </div>
 @endsection
+
+

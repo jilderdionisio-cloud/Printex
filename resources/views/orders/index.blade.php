@@ -10,7 +10,7 @@
                 <h2 class="fw-bold mb-0">Mis pedidos</h2>
             </div>
             <span class="badge text-bg-primary" style="background-color:#1e40af !important;">
-                {{ $orders->count() }} pedidos
+                {{ method_exists($orders, 'total') ? $orders->total() : $orders->count() }} pedidos
             </span>
         </div>
     </div>

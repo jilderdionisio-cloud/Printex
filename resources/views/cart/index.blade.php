@@ -12,11 +12,11 @@
                         <h2 class="fw-bold mb-0">Carrito de compras</h2>
                     </div>
                     <span class="badge text-bg-primary" style="background-color:#1e40af !important;">
-                        {{ count($cartItems ?? []) }} items
+                        {{ ($cartItems ?? collect())->count() }} items
                     </span>
                 </div>
 
-                @if (empty($cartItems) || count($cartItems) === 0)
+                @if (($cartItems ?? collect())->isEmpty())
                     <div class="text-center py-5">
                         <h4 class="fw-bold mb-2">Tu carrito está vacío</h4>
                         <p class="text-muted mb-4">Agrega productos del catálogo y regresa para completar tu compra.</p>

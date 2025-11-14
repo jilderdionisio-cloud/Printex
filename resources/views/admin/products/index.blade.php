@@ -15,7 +15,7 @@
 
     <div class="card border-0 shadow-sm">
         <div class="card-body">
-            <div class="row g-3 mb-3">
+            <form method="GET" class="row g-3 mb-3">
                 <div class="col-12 col-md-4">
                     <input type="text" class="form-control" placeholder="Buscar por nombre…" name="search" value="{{ request('search') }}">
                 </div>
@@ -38,9 +38,9 @@
                     </select>
                 </div>
                 <div class="col-12 col-md-2">
-                    <button class="btn btn-outline-secondary w-100">Filtrar</button>
+                    <button class="btn btn-outline-secondary w-100" type="submit">Filtrar</button>
                 </div>
-            </div>
+            </form>
 
             <div class="table-responsive">
                 <table class="table align-middle">

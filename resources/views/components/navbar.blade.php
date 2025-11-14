@@ -21,7 +21,7 @@
                     <a class="nav-link" href="{{ route('courses.index') }}">Cursos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/about') }}">Nosotros</a>
+                    <a class="nav-link" href="{{ route('about') }}">Nosotros</a>
                 </li>
             </ul>
 
@@ -39,37 +39,42 @@
                     </span>
                 </a>
 
-                <div class="dropdown">
-                    <button class="btn btn-sm btn-primary dropdown-toggle d-flex align-items-center gap-2"
-                            style="background-color:#1e40af;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="badge text-bg-light text-primary fw-semibold" data-profile-role>CLIENTE</span>
-                        <span data-profile-name>Invitado</span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Mi perfil</a></li>
-                        <li><a class="dropdown-item" href="{{ route('orders.index') }}">Mis pedidos</a></li>
-                        <li><a class="dropdown-item" href="{{ route('courses.my') }}">Mis cursos</a></li>
-                        <li>
-                            <a class="dropdown-item d-flex justify-content-between align-items-center"
-                               href="{{ route('admin.dashboard') }}" data-role-guard="admin">
-                                Panel admin
-                                <span class="badge bg-primary">Admin</span>
-                            </a>
-                        </li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <button class="dropdown-item" type="button" data-profile-toggle>
-                                Cambiar perfil
-                            </button>
-                        </li>
-                        <li>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="dropdown-item text-danger">Cerrar sesión</button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
+                @guest
+                    <a href="{{ route('login') }}" class="btn btn-sm btn-outline-primary fw-semibold">
+                        Iniciar sesión
+                    </a>
+                @else
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-primary dropdown-toggle d-flex align-items-center gap-2"
+                                style="background-color:#1e40af;" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="badge text-bg-light text-primary fw-semibold">
+                                {{ strtoupper(auth()->user()->role ?? 'cliente') }}
+                            </span>
+                            <span>{{ auth()->user()->name }}</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Mi perfil</a></li>
+                            <li><a class="dropdown-item" href="{{ route('orders.index') }}">Mis pedidos</a></li>
+                            <li><a class="dropdown-item" href="{{ route('courses.my') }}">Mis cursos</a></li>
+                            @if (auth()->user()->role === 'admin')
+                                <li>
+                                    <a class="dropdown-item d-flex justify-content-between align-items-center"
+                                       href="{{ route('admin.dashboard') }}">
+                                        Panel admin
+                                        <span class="badge bg-primary">Admin</span>
+                                    </a>
+                                </li>
+                            @endif
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item text-danger">Cerrar sesión</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                @endguest
             </div>
         </div>
     </div>
