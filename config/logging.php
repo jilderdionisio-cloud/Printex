@@ -9,12 +9,12 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Default Log Channel
+    | Canal de log predeterminado
     |--------------------------------------------------------------------------
     |
-    | This option defines the default log channel that is utilized to write
-    | messages to your logs. The value provided here should match one of
-    | the channels present in the list of "channels" configured below.
+    | Esta opción define el canal de log que se utilizará para escribir los
+    | mensajes. El valor debe coincidir con alguno de los canales listados
+    | más abajo en la sección "channels".
     |
     */
 
@@ -22,12 +22,12 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Deprecations Log Channel
+    | Canal de log para deprecaciones
     |--------------------------------------------------------------------------
     |
-    | This option controls the log channel that should be used to log warnings
-    | regarding deprecated PHP and library features. This allows you to get
-    | your application ready for upcoming major versions of dependencies.
+    | Esta opción indica qué canal se usará para registrar avisos sobre
+    | características obsoletas de PHP o librerías. Así puedes preparar
+    | la aplicación para futuras versiones de las dependencias.
     |
     */
 
@@ -38,15 +38,15 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Log Channels
+    | Canales de log
     |--------------------------------------------------------------------------
     |
-    | Here you may configure the log channels for your application. Laravel
-    | utilizes the Monolog PHP logging library, which includes a variety
-    | of powerful log handlers and formatters that you're free to use.
+    | Aquí configuras los canales de log de la aplicación. Laravel usa la
+    | librería Monolog de PHP, que ofrece numerosos handlers y formatters
+    | listos para usar.
     |
-    | Available drivers: "single", "daily", "slack", "syslog",
-    |                    "errorlog", "monolog", "custom", "stack"
+    | Drivers disponibles: "single", "daily", "slack", "syslog",
+    |                      "errorlog", "monolog", "custom", "stack"
     |
     */
 
