@@ -13,7 +13,7 @@
         </div>
         <div class="carousel-inner rounded-4 shadow">
             <div class="carousel-item active" data-bs-interval="5000">
-                <img src="https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?auto=format&fit=crop&w=1600&q=80"
+                <img src="https://cdnx.jumpseller.com/yetiplantillas/image/35365233/Mariana.jpg?1684364515"
                      class="d-block w-100" alt="Printex promocion 1">
                 <div class="carousel-caption d-none d-md-block text-start">
                     <h2 class="fw-bold">Insumos premium para sublimación</h2>
@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="carousel-item" data-bs-interval="5000">
-                <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1600&q=80"
+                <img src="https://audaces.com/wp-content/uploads/2024/03/que-es-sublimacion-min-scaled.webp"
                      class="d-block w-100" alt="Printex promocion 2">
                 <div class="carousel-caption d-none d-md-block text-start">
                     <h2 class="fw-bold">Cursos certificados</h2>
@@ -35,7 +35,7 @@
                 </div>
             </div>
             <div class="carousel-item" data-bs-interval="5000">
-                <img src="https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=1600&q=80"
+                <img src="https://dyethrive.com/wp-content/uploads/2023/11/sublimation-print-on-aluminum-at-home.jpg"
                      class="d-block w-100" alt="Printex promocion 3">
                 <div class="carousel-caption d-none d-md-block text-start">
                     <h2 class="fw-bold">Equipos de última generación</h2>

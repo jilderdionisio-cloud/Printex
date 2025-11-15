@@ -62,9 +62,10 @@
                     <input type="number" name="slots" class="form-control" value="{{ old('slots', $course->slots) }}" required>
                 </div>
                 <div class="col-12 col-md-4">
-                    <label class="form-label">URL de imagen</label>
-                    <input type="url" name="image" class="form-control" value="{{ old('image', $course->image) }}">
+                <label class="form-label">Imagen del documento</label>
+                <input type="file" name="image" class="form-control" accept="image/*">
                 </div>
+
                 <div class="col-12 d-flex justify-content-end">
                     <button type="submit" class="btn btn-primary" style="background-color:#1e40af;">
                         Actualizar curso
