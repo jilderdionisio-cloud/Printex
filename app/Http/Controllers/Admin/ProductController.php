@@ -11,6 +11,7 @@ use Illuminate\View\View;
 
 class ProductController extends Controller
 {
+    //Mostrar la lista de productos
     public function index(Request $request): View
     {
         $query = Product::with('category');
@@ -36,14 +37,14 @@ class ProductController extends Controller
 
         return view('admin.products.index', compact('products', 'categories'));
     }
-
+    //Mostrar formulario para crear un producto
     public function create(): View
     {
         $categories = Category::orderBy('name')->get();
 
         return view('admin.products.create', compact('categories'));
     }
-
+    //Guardar un producto nuevo
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
@@ -59,7 +60,7 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products.index')->with('status', 'Producto creado correctamente.');
     }
-
+    //Mostrar formulario para editar un producto
     public function edit(int $id): View
     {
         $product = Product::findOrFail($id);
@@ -67,7 +68,7 @@ class ProductController extends Controller
 
         return view('admin.products.edit', compact('product', 'categories'));
     }
-
+    //Guardar cambios de un producto
     public function update(Request $request, int $id): RedirectResponse
     {
         $product = Product::findOrFail($id);
@@ -85,7 +86,7 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products.index')->with('status', 'Producto actualizado correctamente.');
     }
-
+    //Borrar un producto
     public function destroy(int $id): RedirectResponse
     {
         Product::whereKey($id)->delete();

@@ -1,9 +1,4 @@
-/**
- * Printex frontend helpers
- * Maneja datos en localStorage para prototipo sin backend:
- * - Inicialización de datos
- * - Carrito, pedidos, cursos, chatbot
- */
+
 
 const PrintexStorage = {
     keys: {
@@ -371,7 +366,7 @@ const PrintexApp = {
 document.addEventListener('DOMContentLoaded', () => {
     PrintexApp.init();
 
-    // Ejemplo: botones con data-add-to-cart
+    
     document.querySelectorAll('[data-add-to-cart]').forEach(button => {
         button.addEventListener('click', () => {
             const productId = button.getAttribute('data-product-id');

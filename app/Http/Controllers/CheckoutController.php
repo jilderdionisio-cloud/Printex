@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
+
 class CheckoutController extends Controller
 {
     public function index(): View
@@ -19,7 +20,6 @@ class CheckoutController extends Controller
         return view('checkout', [
             'cartItems' => collect($cart)->values(),
             'summary' => $summary,
-            'user' => auth()->user(),
         ]);
     }
 

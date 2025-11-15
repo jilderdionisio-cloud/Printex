@@ -18,9 +18,9 @@ use App\Http\Controllers\User\MyCoursesController;
 use App\Http\Controllers\User\OrderController as UserOrderController;
 use Illuminate\Support\Facades\Route;
 
-// ===============================
+
 // PÚBLICO
-// ===============================
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Página "Nosotros"
@@ -29,34 +29,30 @@ Route::view('/about', 'about')->name('about');
 // Página "Contacto" (ASEGÚRATE de tener resources/views/contact.blade.php)
 Route::view('/contact', 'contact')->name('contact');
 
-// Productos (catálogo público)
+
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
 
-// Cursos (catálogo público)
+
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
 Route::get('/courses/{id}', [CourseController::class, 'show'])->name('courses.show');
 
-// ===============================
+
 // CARRITO (sesión)
-// ===============================
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::put('/cart/{productId}', [CartController::class, 'update'])->name('cart.update');
 Route::delete('/cart/{productId}', [CartController::class, 'remove'])->name('cart.remove');
 Route::delete('/cart-clear', [CartController::class, 'clear'])->name('cart.clear');
 
-// ===============================
+
 // AUTENTICACIÓN (guest)
-// ===============================
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.store');
 });
 
-// ===============================
 // RUTAS PARA USUARIOS AUTENTICADOS
-// ===============================
 Route::middleware('auth')->group(function () {
 
     // Logout
@@ -83,9 +79,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/my-courses', [MyCoursesController::class, 'index'])->name('courses.my');
 });
 
-// ===============================
+
 // PANEL ADMIN (solo admin)
-// ===============================
+
 Route::prefix('admin')
     ->middleware(['auth', 'admin'])
     ->name('admin.')

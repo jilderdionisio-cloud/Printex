@@ -1,5 +1,5 @@
 <?php
-
+//verifica si hay conexiona la base de datos
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -9,21 +9,21 @@ use Throwable;
 class TestDBConnectionCommand extends Command
 {
     /**
-     * The name and signature of the console command.
+     * El nombre y la firma del comando de consola.
      *
      * @var string
      */
     protected $signature = 'app:test-db';
 
     /**
-     * The console command description.
+     * La descripción del comando de la consola.
      *
      * @var string
      */
     protected $description = 'Verifica la conexión a la base de datos ejecutando un SELECT 1';
 
     /**
-     * Execute the console command.
+     * Ejecuta el comando de la consola.
      */
     public function handle(): int
     {

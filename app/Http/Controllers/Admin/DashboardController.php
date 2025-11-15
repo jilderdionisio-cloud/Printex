@@ -12,13 +12,14 @@ class DashboardController extends Controller
 {
     public function index(): View
     {
+        //Muestra la nfromacion 
         $metrics = [
             'sales' => Order::sum('total'),
             'pending_orders' => Order::where('status', 'Pendiente')->count(),
             'active_courses' => Course::count(),
             'new_users' => User::where('created_at', '>=', now()->subDays(30))->count(),
         ];
-
+       //Buscar cursos populares
         $popularCourses = Course::withCount('enrollments')
             ->orderByDesc('enrollments_count')
             ->take(5)
