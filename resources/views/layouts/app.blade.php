@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
         :root {
             --printex-primary: #1e40af;
@@ -69,6 +70,9 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 10px 30px rgba(249, 115, 22, 0.25);
+            color: #0f172a;
+            font-weight: 900;
+            font-size: 1.15rem;
         }
 
         .printex-brand-title {

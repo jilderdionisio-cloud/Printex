@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg printex-navbar fixed-top py-3 shadow-sm">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center gap-3 text-decoration-none" href="{{ url('/') }}">
-            <span class="printex-logo-mark"></span>
+            <span class="printex-logo-mark">P</span>
             <div class="d-flex flex-column text-white text-uppercase">
                 <span class="printex-brand-title fw-bold">PRINTEX</span>
                 <span class="printex-brand-subtitle">ESTAMPADO PROFESIONAL</span>
