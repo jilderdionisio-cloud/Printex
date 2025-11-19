@@ -32,6 +32,107 @@
             background-color: #172b85;
             color: #fff;
         }
+
+        /* Header */
+        .printex-navbar {
+            background: linear-gradient(90deg, #102b7b 0%, #0a1f52 100%);
+            color: #fff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .printex-navbar .navbar-brand,
+        .printex-navbar .nav-link {
+            color: #f8fafc !important;
+        }
+
+        .printex-navbar .nav-link {
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            padding: 0.75rem 1rem;
+            position: relative;
+            transition: color 0.2s ease, opacity 0.2s ease;
+            opacity: 0.85;
+        }
+
+        .printex-navbar .nav-link:hover,
+        .printex-navbar .nav-link:focus,
+        .printex-navbar .nav-link.active {
+            opacity: 1;
+        }
+
+        .printex-logo-mark {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f97316 0%, #f59e0b 100%);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.25);
+        }
+
+        .printex-brand-title {
+            font-size: 1.05rem;
+            letter-spacing: 0.18em;
+        }
+
+        .printex-brand-subtitle {
+            font-size: 0.72rem;
+            letter-spacing: 0.16em;
+            opacity: 0.75;
+        }
+
+        .printex-cart-btn {
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 0.55rem 0.7rem;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .printex-cart-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-1px);
+        }
+
+        .printex-login-btn {
+            background: linear-gradient(135deg, #f97316 0%, #f59e0b 100%);
+            color: #0f172a;
+            border: none;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            padding: 0.55rem 1rem;
+            border-radius: 12px;
+            box-shadow: 0 12px 30px rgba(249, 115, 22, 0.35);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .printex-login-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 16px 38px rgba(249, 115, 22, 0.4);
+            color: #0f172a;
+        }
+
+        .printex-account-btn {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+        }
+
+        .printex-account-btn:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.16);
+        }
+
+        .printex-navbar .navbar-toggler {
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .printex-navbar .navbar-toggler-icon {
+            filter: invert(1);
+        }
     </style>
     @stack('styles')
 </head>
