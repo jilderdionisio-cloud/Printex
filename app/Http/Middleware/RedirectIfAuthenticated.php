@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Middleware;
-
+//Redirije al usuario al home 
 use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Http\Request;

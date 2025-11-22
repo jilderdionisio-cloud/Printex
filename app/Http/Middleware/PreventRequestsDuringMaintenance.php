@@ -1,5 +1,5 @@
 <?php
-
+//Si la app está en mantenimiento, nadie puede entrar.
 namespace App\Http\Middleware;
 
 use Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance as Middleware;

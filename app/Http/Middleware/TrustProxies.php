@@ -1,5 +1,5 @@
 <?php
-
+//Laravel que confíe en los proxies que están entre el usuario y el servidor.
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Middleware\TrustProxies as Middleware;

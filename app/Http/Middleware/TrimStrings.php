@@ -1,5 +1,5 @@
 <?php
-
+// Permite eliminar, cosas como espacion 
 namespace App\Http\Middleware;
 
 use Illuminate\Foundation\Http\Middleware\TrimStrings as Middleware;

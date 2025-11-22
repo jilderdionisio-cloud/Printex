@@ -22,7 +22,7 @@ class CourseEnrollmentController extends Controller
 
         CourseEnrollment::create([
             'course_id' => $course->id,
-            'user_id' => auth()->id(),
+            
             'student_name' => $data['student_name'],
             'student_email' => $data['student_email'],
             'student_phone' => $data['student_phone'],
