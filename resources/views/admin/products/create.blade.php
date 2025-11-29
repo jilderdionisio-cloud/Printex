@@ -24,7 +24,7 @@
 
     <div class="card border-0 shadow-sm">
         <div class="card-body">
-            <form method="POST" action="{{ route('admin.products.store') }}" class="row g-4">
+            <form method="POST" action="{{ route('admin.products.store') }}" class="row g-4" enctype="multipart/form-data">
                 @csrf
                 <div class="col-12 col-lg-6">
                     <label class="form-label">Nombre</label>
@@ -32,14 +32,17 @@
                 </div>
                 <div class="col-12 col-lg-6">
                     <label class="form-label">Categoría</label>
-                    <select name="category_id" class="form-select" required>
-                        <option value="">Seleccione</option>
+                    <select name="category_id" class="form-select" required @disabled($categories->isEmpty())>
+                        <option value="">{{ $categories->isEmpty() ? 'No hay categorías disponibles' : 'Seleccione' }}</option>
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}" @selected(old('category_id') == $category->id)>
                                 {{ $category->name }}
                             </option>
                         @endforeach
                     </select>
+                    @if ($categories->isEmpty())
+                        <small class="text-danger">Primero crea una categoría para poder registrar productos.</small>
+                    @endif
                 </div>
                 <div class="col-12">
                     <label class="form-label">Descripción</label>
@@ -54,8 +57,9 @@
                     <input type="number" name="stock" class="form-control" value="{{ old('stock') }}" required>
                 </div>
                 <div class="col-12 col-md-4">
-                    <label class="form-label">URL de imagen</label>
-                    <input type="url" name="image" class="form-control" value="{{ old('image') }}">
+                    <label class="form-label">Imagen</label>
+                    <input type="file" name="image" class="form-control" accept="image/*">
+                    <small class="text-muted">Formatos permitidos: JPG, PNG, WebP. Máx 2MB.</small>
                 </div>
                 <div class="col-12 d-flex justify-content-end">
                     <button type="submit" class="btn btn-primary" style="background-color:#1e40af;">

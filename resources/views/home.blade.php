@@ -313,8 +313,8 @@
                     <div class="col-12 col-md-6 col-lg-4">
                         <div class="product-card h-100">
                             <div class="product-img ratio ratio-4x3">
-                                @if ($product->image)
-                                    <img src="{{ $product->image }}" alt="{{ $product->name }}" class="object-fit-cover rounded-top">
+                                @if ($product->image_url)
+                                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="object-fit-cover rounded-top">
                                 @else
                                     <div class="d-flex align-items-center justify-content-center text-muted">Imagen producto</div>
                                 @endif

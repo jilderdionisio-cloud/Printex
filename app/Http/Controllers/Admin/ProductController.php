@@ -7,6 +7,8 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProductController extends Controller
@@ -40,6 +42,7 @@ class ProductController extends Controller
     //Mostrar formulario para crear un producto
     public function create(): View
     {
+        $this->ensureDefaultCategory();
         $categories = Category::orderBy('name')->get();
 
         return view('admin.products.create', compact('categories'));
@@ -53,8 +56,12 @@ class ProductController extends Controller
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
             'stock' => ['required', 'integer', 'min:0'],
-            'image' => ['nullable', 'url'],
+            'image' => ['nullable', 'image', 'max:2048'],
         ]);
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('products', 'public');
+        }
 
         Product::create($data);
 
@@ -64,6 +71,7 @@ class ProductController extends Controller
     public function edit(int $id): View
     {
         $product = Product::findOrFail($id);
+        $this->ensureDefaultCategory();
         $categories = Category::orderBy('name')->get();
 
         return view('admin.products.edit', compact('product', 'categories'));
@@ -79,8 +87,15 @@ class ProductController extends Controller
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
             'stock' => ['required', 'integer', 'min:0'],
-            'image' => ['nullable', 'url'],
+            'image' => ['nullable', 'image', 'max:2048'],
         ]);
+
+        if ($request->hasFile('image')) {
+            if ($product->image && ! Str::startsWith($product->image, ['http://', 'https://'])) {
+                Storage::disk('public')->delete($product->image);
+            }
+            $data['image'] = $request->file('image')->store('products', 'public');
+        }
 
         $product->update($data);
 
@@ -92,5 +107,15 @@ class ProductController extends Controller
         Product::whereKey($id)->delete();
 
         return redirect()->route('admin.products.index')->with('status', 'Producto eliminado.');
+    }
+
+    private function ensureDefaultCategory(): void
+    {
+        if (Category::count() === 0) {
+            Category::create([
+                'name' => 'General',
+                'description' => 'Categoría creada automáticamente.',
+            ]);
+        }
     }
 }

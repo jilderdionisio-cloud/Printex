@@ -7,8 +7,8 @@
         <div class="col-12 col-lg-6">
             <div class="bg-white rounded-4 shadow-sm p-4 h-100">
                 <div class="ratio ratio-4x3 mb-3 rounded-4 bg-light">
-                    @if (!empty($product->image))
-                        <img src="{{ $product->image }}" alt="{{ $product->name }}" class="rounded-4 object-fit-cover">
+                    @if (!empty($product->image_url))
+                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="rounded-4 object-fit-cover">
                     @else
                         <div class="d-flex justify-content-center align-items-center text-muted fw-semibold">
                             Imagen no disponible

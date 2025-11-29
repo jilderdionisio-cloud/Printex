@@ -24,7 +24,7 @@
 
     <div class="card border-0 shadow-sm">
         <div class="card-body">
-            <form method="POST" action="{{ route('admin.products.update', $product) }}" class="row g-4">
+            <form method="POST" action="{{ route('admin.products.update', $product) }}" class="row g-4" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="col-12 col-lg-6">
@@ -33,7 +33,10 @@
                 </div>
                 <div class="col-12 col-lg-6">
                     <label class="form-label">Categoría</label>
-                    <select name="category_id" class="form-select" required>
+                    <select name="category_id" class="form-select" required @disabled($categories->isEmpty())>
+                        @if ($categories->isEmpty())
+                            <option value="">No hay categorías disponibles</option>
+                        @endif
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}"
                                     @selected(old('category_id', $product->category_id) == $category->id)>
@@ -41,6 +44,9 @@
                             </option>
                         @endforeach
                     </select>
+                    @if ($categories->isEmpty())
+                        <small class="text-danger">Agrega categorías antes de editar productos.</small>
+                    @endif
                 </div>
                 <div class="col-12">
                     <label class="form-label">Descripción</label>
@@ -55,8 +61,15 @@
                     <input type="number" name="stock" class="form-control" value="{{ old('stock', $product->stock) }}" required>
                 </div>
                 <div class="col-12 col-md-4">
-                    <label class="form-label">URL de imagen</label>
-                    <input type="url" name="image" class="form-control" value="{{ old('image', $product->image) }}">
+                    <label class="form-label">Imagen</label>
+                    <input type="file" name="image" class="form-control" accept="image/*">
+                    <small class="text-muted">Deja vacío para mantener la imagen actual. Máx 2MB.</small>
+                    @if ($product->image_url)
+                        <div class="mt-2">
+                            <small class="text-muted d-block">Imagen actual:</small>
+                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="img-fluid rounded" style="max-height:120px;">
+                        </div>
+                    @endif
                 </div>
                 <div class="col-12 d-flex justify-content-end">
                     <button type="submit" class="btn btn-primary" style="background-color:#1e40af;">

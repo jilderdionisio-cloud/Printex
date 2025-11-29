@@ -73,8 +73,8 @@
                 <div class="col-12 col-md-6 col-xl-3">
                     <div class="card h-100 border-0 shadow-sm">
                         <div class="ratio ratio-4x3 bg-light rounded-top" style="background-color:#e5e7eb;">
-                            @if (!empty($product->image))
-                                <img src="{{ $product->image }}" alt="{{ $product->name }}" class="rounded-top object-fit-cover">
+                            @if (!empty($product->image_url))
+                                <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="rounded-top object-fit-cover">
                             @else
                                 <div class="d-flex justify-content-center align-items-center text-muted">
                                     Imagen no disponible
