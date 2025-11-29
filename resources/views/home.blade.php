@@ -341,17 +341,24 @@
                 <p class="section-subtitle">Aprende de los expertos y lleva tu negocio al siguiente nivel.</p>
             </div>
             <div class="row g-4 mb-3">
-                @forelse ($courses as $course)
-                    <div class="col-12 col-lg-4">
-                        <div class="course-card h-100">
-                            <div class="ratio ratio-16x9 rounded-top course-thumb bg-light">
-                                @if (!empty($course->image_url))
-                                    <img src="{{ $course->image_url }}" alt="{{ $course->name }}" class="object-fit-cover rounded-top">
-                                @else
-                                    <div class="d-flex align-items-center justify-content-center text-muted">Imagen curso</div>
-                                @endif
-                            </div>
-                            <div class="course-body">
+                        @forelse ($courses as $course)
+                            <div class="col-12 col-lg-4">
+                                <div class="course-card h-100">
+                                    <div class="ratio ratio-16x9 rounded-top course-thumb bg-light">
+                                        @php
+                                            $imagePath = $course->image ?? null;
+                                        @endphp
+                                        @if (!empty($imagePath))
+                                            @if (\Illuminate\Support\Str::startsWith($imagePath, ['http://', 'https://']))
+                                                <img src="{{ $imagePath }}" alt="{{ $course->name }}" class="object-fit-cover rounded-top" style="width: 100%; height: 100%; object-fit: cover;">
+                                            @else
+                                                <img src="{{ asset('storage/' . $imagePath) }}" alt="{{ $course->name }}" class="object-fit-cover rounded-top" style="width: 100%; height: 100%; object-fit: cover;">
+                                            @endif
+                                        @else
+                                            <div class="d-flex align-items-center justify-content-center text-muted">Imagen curso</div>
+                                        @endif
+                                    </div>
+                                    <div class="course-body">
                                 <div class="d-flex align-items-center gap-2 mb-2">
                                     <span class="badge bg-warning text-dark">{{ $course->modality ?? 'Online' }}</span>
                                     <small class="text-muted">{{ $course->duration ?? 'Flexible' }}</small>

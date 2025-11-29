@@ -25,8 +25,15 @@
             <div class="col-12 col-md-6 col-xl-4">
                 <div class="card h-100 border-0 shadow-sm">
                     <div class="ratio ratio-16x9 rounded-top bg-light">
-                        @if (!empty($course->image_url))
-                            <img src="{{ $course->image_url }}" alt="{{ $course->name }}" class="rounded-top object-fit-cover">
+                        @php
+                            $imagePath = $course->image ?? null;
+                        @endphp
+                        @if (!empty($imagePath))
+                            @if (\Illuminate\Support\Str::startsWith($imagePath, ['http://', 'https://']))
+                                <img src="{{ $imagePath }}" alt="{{ $course->name }}" class="rounded-top object-fit-cover" style="width: 100%; height: 100%; object-fit: cover;">
+                            @else
+                                <img src="{{ asset('storage/' . $imagePath) }}" alt="{{ $course->name }}" class="rounded-top object-fit-cover" style="width: 100%; height: 100%; object-fit: cover;">
+                            @endif
                         @else
                             <div class="d-flex justify-content-center align-items-center text-muted">
                                 Imagen del curso

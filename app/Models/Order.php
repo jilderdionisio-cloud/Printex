@@ -19,7 +19,13 @@ class Order extends Model
         'payment_method',
         'status',
         'shipping_address',
-        'notes',
+    ];
+
+    protected $casts = [
+        'user_id' => 'integer',
+        'subtotal' => 'decimal:2',
+        'discount' => 'decimal:2',
+        'total' => 'decimal:2',
     ];
 
     public function user(): BelongsTo

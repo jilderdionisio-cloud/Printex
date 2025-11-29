@@ -6,6 +6,22 @@
     <div class="row g-4">
         <div class="col-12 col-lg-7">
             <div class="bg-white rounded-4 shadow-sm p-4 h-100">
+                <div class="ratio ratio-16x9 rounded-3 mb-3 bg-light">
+                    @php
+                        $imagePath = $course->image ?? null;
+                    @endphp
+                    @if (!empty($imagePath))
+                        @if (\Illuminate\Support\Str::startsWith($imagePath, ['http://', 'https://']))
+                            <img src="{{ $imagePath }}" alt="{{ $course->name }}" class="rounded-3 object-fit-cover" style="width: 100%; height: 100%; object-fit: cover;">
+                        @else
+                            <img src="{{ asset('storage/' . $imagePath) }}" alt="{{ $course->name }}" class="rounded-3 object-fit-cover" style="width: 100%; height: 100%; object-fit: cover;">
+                        @endif
+                    @else
+                        <div class="d-flex justify-content-center align-items-center text-muted">
+                            Imagen del curso
+                        </div>
+                    @endif
+                </div>
                 <span class="badge text-bg-primary mb-3" style="background-color:#1e40af !important;">
                     {{ $course->modality ?? 'Presencial' }}
                 </span>

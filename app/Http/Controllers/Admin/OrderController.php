@@ -34,7 +34,9 @@ class OrderController extends Controller
             'notes' => ['nullable', 'string'],
         ]);
 
-        $order->update($data);
+        $order->status = $data['status'];
+        $order->notes = $data['notes'] ?? null;
+        $order->save();
 
         return back()->with('status', 'Estado del pedido actualizado.');
     }

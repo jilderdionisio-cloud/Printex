@@ -79,10 +79,17 @@
                     <label class="form-label">Imagen</label>
                     <input type="file" name="image" class="form-control" accept="image/*">
                     <small class="text-muted">Deja vacío para mantener la imagen actual. Máx 2MB.</small>
-                    @if ($course->image_url)
+                    @php
+                        $imagePath = $course->image ?? null;
+                    @endphp
+                    @if ($imagePath)
                         <div class="mt-2">
                             <small class="text-muted d-block">Imagen actual:</small>
-                            <img src="{{ $course->image_url }}" alt="{{ $course->name }}" class="img-fluid rounded" style="max-height:120px;">
+                            @if (\Illuminate\Support\Str::startsWith($imagePath, ['http://', 'https://']))
+                                <img src="{{ $imagePath }}" alt="{{ $course->name }}" class="img-fluid rounded" style="max-height:120px;">
+                            @else
+                                <img src="{{ asset('storage/' . $imagePath) }}" alt="{{ $course->name }}" class="img-fluid rounded" style="max-height:120px;">
+                            @endif
                         </div>
                     @endif
                 </div>
