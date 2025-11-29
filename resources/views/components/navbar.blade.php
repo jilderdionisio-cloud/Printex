@@ -30,18 +30,21 @@
                     </li>
                 </ul>
 
-                <div class="d-flex align-items-center justify-content-center justify-content-lg-end gap-3 ms-lg-4 mt-3 mt-lg-0">
-                    <a href="{{ route('cart.index') }}"
-                       class="btn printex-cart-btn position-relative d-inline-flex align-items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#fff" viewBox="0 0 16 16">
-                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5m3.102 2 .84 4.5H13.5l1.2-6H3.102z"/>
-                            <path d="M5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4M5 13a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-                        </svg>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                              data-cart-count>
-                            0
-                        </span>
-                    </a>
+            <div class="d-flex align-items-center justify-content-center justify-content-lg-end gap-3 ms-lg-4 mt-3 mt-lg-0">
+                @php
+                    $cartCount = collect(session('cart', []))->sum(fn ($item) => $item['quantity'] ?? 0);
+                @endphp
+                <a href="{{ route('cart.index') }}"
+                   class="btn printex-cart-btn position-relative d-inline-flex align-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#fff" viewBox="0 0 16 16">
+                        <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5m3.102 2 .84 4.5H13.5l1.2-6H3.102z"/>
+                        <path d="M5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4M5 13a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                    </svg>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                          data-cart-count>
+                            {{ $cartCount }}
+                    </span>
+                </a>
 
                     @guest
                         <a href="{{ route('login') }}" class="btn printex-login-btn btn-sm">
