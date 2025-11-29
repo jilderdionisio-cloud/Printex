@@ -137,6 +137,20 @@
         .printex-navbar .navbar-toggler-icon {
             filter: invert(1);
         }
+
+        /* Asegura que las imágenes de productos no tengan velos u overlays */
+        .ratio img,
+        .product-img img,
+        .card img {
+            mix-blend-mode: normal !important;
+            filter: none !important;
+            opacity: 1 !important;
+        }
+        .product-img::before,
+        .product-img::after {
+            background: transparent !important;
+            box-shadow: none !important;
+        }
     </style>
     @stack('styles')
 </head>

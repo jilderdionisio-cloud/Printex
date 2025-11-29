@@ -42,6 +42,18 @@ class Product extends Model
             return $this->image;
         }
 
-        return Storage::disk('public')->url($this->image);
+        $publicPath = public_path('storage/' . $this->image);
+        if (file_exists($publicPath)) {
+            return asset('storage/' . $this->image);
+        }
+
+        if (Storage::disk('public')->exists($this->image)) {
+            $disk = Storage::disk('public');
+            $mime = $disk->mimeType($this->image) ?: 'image/jpeg';
+
+            return 'data:' . $mime . ';base64,' . base64_encode($disk->get($this->image));
+        }
+
+        return null;
     }
 }

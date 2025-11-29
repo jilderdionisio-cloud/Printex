@@ -165,17 +165,6 @@
         box-shadow: 0 14px 34px rgba(0,0,0,0.06);
     }
     .product-img, .course-thumb { position: relative; overflow: hidden; }
-    .tag-chip {
-        position: absolute;
-        top: 12px;
-        left: 12px;
-        background: rgba(15, 23, 42, 0.85);
-        color: #fff;
-        padding: 0.2rem 0.6rem;
-        border-radius: 999px;
-        font-size: 0.75rem;
-        font-weight: 700;
-    }
     .product-body, .course-body { padding: 1rem 1.1rem 1.2rem; }
     .price { font-size: 1.1rem; }
 
@@ -318,7 +307,6 @@
                                 @else
                                     <div class="d-flex align-items-center justify-content-center text-muted">Imagen producto</div>
                                 @endif
-                                <span class="tag-chip">{{ $product->category->name ?? 'General' }}</span>
                             </div>
                             <div class="product-body">
                                 <h5 class="fw-bold mb-2">{{ $product->name }}</h5>

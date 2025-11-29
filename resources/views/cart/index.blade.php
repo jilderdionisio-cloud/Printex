@@ -42,8 +42,8 @@
                                         <td>
                                             <div class="d-flex align-items-center gap-3">
                                                 <div class="rounded bg-light" style="width:64px;height:64px;">
-                                                    @if (!empty($item['product']->image))
-                                                        <img src="{{ $item['product']->image }}" alt="{{ $item['product']->name }}"
+                                                    @if (!empty($item['product']->image_url))
+                                                        <img src="{{ $item['product']->image_url }}" alt="{{ $item['product']->name }}"
                                                              class="rounded object-fit-cover" style="width:64px;height:64px;">
                                                     @endif
                                                 </div>
