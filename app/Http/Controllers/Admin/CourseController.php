@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Course;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class CourseController extends Controller
@@ -17,10 +20,12 @@ class CourseController extends Controller
 
         return view('admin.courses.index', compact('courses'));
     }
-   //Mostrar el formulario para crear
+    //Mostrar el formulario para crear
     public function create(): View
     {
-        return view('admin.courses.create');
+        $instructors = $this->instructorsList();
+
+        return view('admin.courses.create', compact('instructors'));
     }
    //Guardar un curso nuevo
     public function store(Request $request): RedirectResponse
@@ -33,19 +38,24 @@ class CourseController extends Controller
             'modality' => ['required', 'string', 'max:50'],
             'slots' => ['required', 'integer', 'min:1'],
             'instructor' => ['required', 'string', 'max:255'],
-            'image' => ['nullable', 'url'],
+            'image' => ['nullable', 'image', 'max:2048'],
         ]);
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('courses', 'public');
+        }
 
         Course::create($data);
 
         return redirect()->route('admin.courses.index')->with('status', 'Curso creado correctamente.');
     }
-   //Ver formulario para editar un curso
+    //Ver formulario para editar un curso
     public function edit(int $id): View
     {
         $course = Course::findOrFail($id);
+        $instructors = $this->instructorsList();
 
-        return view('admin.courses.edit', compact('course'));
+        return view('admin.courses.edit', compact('course', 'instructors'));
     }
    //Guardar los cambios de un curso
     public function update(Request $request, int $id): RedirectResponse
@@ -60,8 +70,15 @@ class CourseController extends Controller
             'modality' => ['required', 'string', 'max:50'],
             'slots' => ['required', 'integer', 'min:1'],
             'instructor' => ['required', 'string', 'max:255'],
-            'image' => ['nullable', 'url'],
+            'image' => ['nullable', 'image', 'max:2048'],
         ]);
+
+        if ($request->hasFile('image')) {
+            if ($course->image && ! Str::startsWith($course->image, ['http://', 'https://'])) {
+                Storage::disk('public')->delete($course->image);
+            }
+            $data['image'] = $request->file('image')->store('courses', 'public');
+        }
 
         $course->update($data);
 
@@ -73,5 +90,21 @@ class CourseController extends Controller
         Course::whereKey($id)->delete();
 
         return redirect()->route('admin.courses.index')->with('status', 'Curso eliminado.');
+    }
+
+    private function instructorsList()
+    {
+        $whitelist = [
+            'maria.gomez@printex.com',
+            'luis.rojas@printex.com',
+            'carolina.mejia@printex.com',
+        ];
+
+        return User::where(function ($q) use ($whitelist) {
+            $q->where('role', 'instructor')
+                ->orWhereIn('email', $whitelist);
+        })
+            ->orderBy('name')
+            ->get();
     }
 }

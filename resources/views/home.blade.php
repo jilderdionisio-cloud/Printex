@@ -357,8 +357,8 @@
                     <div class="col-12 col-lg-4">
                         <div class="course-card h-100">
                             <div class="ratio ratio-16x9 rounded-top course-thumb bg-light">
-                                @if (!empty($course->image))
-                                    <img src="{{ $course->image }}" alt="{{ $course->name }}" class="object-fit-cover rounded-top">
+                                @if (!empty($course->image_url))
+                                    <img src="{{ $course->image_url }}" alt="{{ $course->name }}" class="object-fit-cover rounded-top">
                                 @else
                                     <div class="d-flex align-items-center justify-content-center text-muted">Imagen curso</div>
                                 @endif

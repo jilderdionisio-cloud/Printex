@@ -25,8 +25,8 @@
             <div class="col-12 col-md-6 col-xl-4">
                 <div class="card h-100 border-0 shadow-sm">
                     <div class="ratio ratio-16x9 rounded-top bg-light">
-                        @if (!empty($course->image))
-                            <img src="{{ $course->image }}" alt="{{ $course->name }}" class="rounded-top object-fit-cover">
+                        @if (!empty($course->image_url))
+                            <img src="{{ $course->image_url }}" alt="{{ $course->name }}" class="rounded-top object-fit-cover">
                         @else
                             <div class="d-flex justify-content-center align-items-center text-muted">
                                 Imagen del curso

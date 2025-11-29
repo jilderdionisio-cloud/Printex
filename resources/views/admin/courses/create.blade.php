@@ -24,7 +24,7 @@
 
     <div class="card border-0 shadow-sm">
         <div class="card-body">
-            <form method="POST" action="{{ route('admin.courses.store') }}" class="row g-4">
+            <form method="POST" action="{{ route('admin.courses.store') }}" class="row g-4" enctype="multipart/form-data">
                 @csrf
                 <div class="col-12 col-lg-6">
                     <label class="form-label">Nombre</label>
@@ -32,7 +32,21 @@
                 </div>
                 <div class="col-12 col-lg-6">
                     <label class="form-label">Instructor</label>
-                    <input type="text" name="instructor" class="form-control" value="{{ old('instructor') }}" required>
+                    <select name="instructor" class="form-select" required @disabled($instructors->isEmpty())>
+                        @if ($instructors->isEmpty())
+                            <option value="">No hay instructores disponibles</option>
+                        @else
+                            <option value="" selected hidden>Seleccione</option>
+                            @foreach ($instructors as $instructor)
+                                <option value="{{ $instructor->name }}" @selected(old('instructor') === $instructor->name)>
+                                    {{ $instructor->name }}
+                                </option>
+                            @endforeach
+                        @endif
+                    </select>
+                    @if ($instructors->isEmpty())
+                        <small class="text-danger">Crea usuarios con rol "instructor" para habilitar este campo.</small>
+                    @endif
                 </div>
                 <div class="col-12">
                     <label class="form-label">Descripción</label>
@@ -59,8 +73,9 @@
                     <input type="number" name="slots" class="form-control" value="{{ old('slots') }}" required>
                 </div>
                 <div class="col-12 col-md-4">
-                    <label class="form-label">URL de imagen</label>
-                    <input type="url" name="image" class="form-control" value="{{ old('image') }}">
+                    <label class="form-label">Imagen</label>
+                    <input type="file" name="image" class="form-control" accept="image/*">
+                    <small class="text-muted">Formatos permitidos: JPG, PNG, WebP. Máx 2MB.</small>
                 </div>
                 <div class="col-12 d-flex justify-content-end">
                     <button type="submit" class="btn btn-primary" style="background-color:#1e40af;">
