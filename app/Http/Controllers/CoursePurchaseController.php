@@ -29,9 +29,41 @@ class CoursePurchaseController extends Controller
         $data = $request->validate([
             'payment_method' => ['required', 'string', 'max:50'],
             'payment_reference' => ['nullable', 'string', 'max:255'],
+            'payment_reference_transfer' => ['nullable', 'string', 'max:255'],
+            'card_number' => ['nullable', 'string', 'max:32'],
+            'card_exp' => ['nullable', 'string', 'max:8'],
+            'card_cvv' => ['nullable', 'string', 'max:8'],
         ]);
 
-        DB::transaction(function () use ($course, $user, $data) {
+        // Validamos campos segun metodo seleccionado
+        if ($data['payment_method'] === 'tarjeta') {
+            $request->validate([
+                'card_number' => ['required', 'string', 'min:12', 'max:32'],
+                'card_exp' => ['required', 'string', 'max:8'],
+                'card_cvv' => ['required', 'string', 'max:8'],
+            ]);
+        } elseif ($data['payment_method'] === 'yape-plin') {
+            $request->validate([
+                'payment_reference' => ['required', 'string', 'max:255'],
+            ]);
+        } elseif ($data['payment_method'] === 'transferencia') {
+            $request->validate([
+                'payment_reference_transfer' => ['required', 'string', 'max:255'],
+            ]);
+        }
+
+        // Normalizamos la referencia segun el metodo de pago
+        $reference = null;
+        if ($data['payment_method'] === 'tarjeta') {
+            $last4 = isset($data['card_number']) ? substr(preg_replace('/\\D/', '', $data['card_number']), -4) : null;
+            $reference = trim(($last4 ? 'Tarjeta ****' . $last4 . ' ' : '') . ($data['card_exp'] ?? ''));
+        } elseif ($data['payment_method'] === 'yape-plin') {
+            $reference = $data['payment_reference'] ?? null;
+        } elseif ($data['payment_method'] === 'transferencia') {
+            $reference = $data['payment_reference_transfer'] ?? null;
+        }
+
+        DB::transaction(function () use ($course, $user, $data, $reference) {
             $order = Order::create([
                 'user_id' => $user->id,
                 'subtotal' => $course->price,
@@ -41,6 +73,7 @@ class CoursePurchaseController extends Controller
                 // Usamos un estado permitido por el flujo de pedidos
                 'status' => 'Procesando',
                 'shipping_address' => 'Entrega digital - video',
+                'notes' => $reference,
             ]);
             \App\Support\AuditLogger::log('created', $order);
 
@@ -57,10 +90,11 @@ class CoursePurchaseController extends Controller
             CourseEnrollment::create([
                 'course_id' => $course->id,
                 'user_id' => $user->id,
-                'student_name' => $user->name ?? null,
-                'student_email' => $user->email ?? null,
-                'student_phone' => $user->phone ?? null,
-                'student_address' => $user->address ?? null,
+                'student_name' => $user->name ?? 'Cliente',
+                'student_email' => $user->email ?? 'sin-correo',
+                // Algunas columnas son NOT NULL en la base, aseguramos valores por defecto
+                'student_phone' => $user->phone ?? 'sin-telefono',
+                'student_address' => $user->address ?? 'sin-direccion',
                 'status' => 'Activo',
             ]);
 
@@ -70,6 +104,6 @@ class CoursePurchaseController extends Controller
 
         return redirect()
             ->route('courses.show', $course->id)
-            ->with('status', 'Pago confirmado. Ya puedes descargar o ver el video.');
+            ->with('status', 'Ya puedes revisar el video en Mis cursos. Gracias por tu compra.');
     }
 }

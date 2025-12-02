@@ -18,6 +18,7 @@ use App\Http\Controllers\CoursePurchaseController;
 use App\Http\Controllers\CourseEnrollmentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductReviewController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupportRequestController;
 use App\Http\Controllers\User\MyCoursesController;
@@ -57,6 +58,9 @@ Route::middleware('auth')->group(function () {
     // Inscripci?n a cursos (cliente)
     Route::post('/courses/{course}/enroll', [CourseEnrollmentController::class, 'store'])->name('courses.enroll');
     Route::post('/courses/{course}/purchase', [CoursePurchaseController::class, 'store'])->name('courses.purchase');
+
+    // Reseñas de productos
+    Route::post('/products/{product}/reviews', [ProductReviewController::class, 'store'])->name('products.reviews.store');
 
     // Checkout
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');

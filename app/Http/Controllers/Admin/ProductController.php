@@ -53,7 +53,19 @@ class ProductController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'category_id' => ['required', 'exists:categories,id'],
+            'category_id' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    if ($value === 'new') {
+                        return;
+                    }
+                    if (! Category::whereKey($value)->exists()) {
+                        $fail('La categoría seleccionada no existe.');
+                    }
+                },
+            ],
+            'category_name_new' => ['required_if:category_id,new', 'string', 'max:255'],
+            'category_description_new' => ['nullable', 'string', 'max:255'],
             'supplier_id' => ['required', 'exists:suppliers,id'],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -64,6 +76,14 @@ class ProductController extends Controller
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        if ($data['category_id'] === 'new') {
+            $category = Category::create([
+                'name' => $data['category_name_new'],
+                'description' => $data['category_description_new'] ?? null,
+            ]);
+            $data['category_id'] = $category->id;
         }
 
         $product = Product::create($data);
