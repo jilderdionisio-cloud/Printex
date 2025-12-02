@@ -37,10 +37,12 @@ Route::get('/courses/{id}', [CourseController::class, 'show'])->name('courses.sh
 
 // CARRITO (sesi?n)
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
-Route::put('/cart/{itemKey}', [CartController::class, 'update'])->name('cart.update');
-Route::delete('/cart/{itemKey}', [CartController::class, 'remove'])->name('cart.remove');
-Route::delete('/cart-clear', [CartController::class, 'clear'])->name('cart.clear');
+Route::middleware('auth')->group(function () {
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::put('/cart/{itemKey}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/{itemKey}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::delete('/cart-clear', [CartController::class, 'clear'])->name('cart.clear');
+});
 
 // AUTENTICACI?N (guest)
 Route::middleware('guest')->group(function () {

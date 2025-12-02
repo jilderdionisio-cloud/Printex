@@ -8,7 +8,7 @@
             <div class="bg-white rounded-4 shadow-sm p-4">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <p class="text-uppercase text-muted small mb-1">Tu selecciÃ³n</p>
+                        <p class="text-uppercase text-muted small mb-1">Tu seleccion</p>
                         <h2 class="fw-bold mb-0">Carrito de compras</h2>
                     </div>
                     <span class="badge text-bg-primary" style="background-color:#1e40af !important;">
@@ -18,10 +18,10 @@
 
                 @if (($cartItems ?? collect())->isEmpty())
                     <div class="text-center py-5">
-                        <h4 class="fw-bold mb-2">Tu carrito estÃ¡ vacÃ­o</h4>
-                        <p class="text-muted mb-4">Agrega productos del catÃ¡logo y regresa para completar tu compra.</p>
+                        <h4 class="fw-bold mb-2">Tu carrito esta vacio</h4>
+                        <p class="text-muted mb-4">Agrega productos del catalogo y regresa para completar tu compra.</p>
                         <a href="{{ route('products.index') }}" class="btn btn-primary" style="background-color:#1e40af;">
-                            Ir al catÃ¡logo
+                            Ir al catalogo
                         </a>
                     </div>
                 @else
@@ -64,7 +64,7 @@
                                                 <div>
                                                     <h6 class="mb-1">{{ $name }}</h6>
                                                     <small class="text-muted">
-                                                        Categor?a: {{ $categoryLabel }}
+                                                        Categoria: {{ $categoryLabel }}
                                                     </small>
                                                 </div>
                                             </div>
@@ -136,7 +136,7 @@
             </div>
 
             <div class="bg-light rounded-4 p-4 mt-3">
-                <h6 class="text-uppercase text-muted small">MÃ©todos aceptados</h6>
+                <h6 class="text-uppercase text-muted small">Metodos aceptados</h6>
                 <div class="d-flex gap-3">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Visa_2014_logo_detail.svg" alt="Visa" height="24">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png" alt="Mastercard" height="24">

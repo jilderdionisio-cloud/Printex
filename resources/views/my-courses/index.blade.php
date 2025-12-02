@@ -1,4 +1,4 @@
-ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â»ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Mis cursos | Printex')
 
@@ -17,7 +17,7 @@
 
     @if ($enrollments->isEmpty())
         <div class="bg-white rounded-4 shadow-sm p-5 text-center">
-            <h4 class="fw-bold mb-2">AÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âºn no te has inscrito</h4>
+            <h4 class="fw-bold mb-2">Aún no te has inscrito</h4>
             <p class="text-muted mb-4">Empieza un nuevo curso y lleva tu negocio de estampado al siguiente nivel.</p>
             <a href="{{ route('courses.index') }}" class="btn btn-primary" style="background-color:#1e40af;">
                 Ver cursos disponibles
@@ -39,20 +39,34 @@
                             </div>
                             <h4>{{ $enrollment->course->name ?? 'Curso' }}</h4>
                             <p class="text-muted mb-1">
-                                <strong>Duración:</strong> {{ ($enrollment->course->duration_hours ?? "N/D") . " horas" }}
+                                <strong>Duración:</strong> {{ ($enrollment->course->duration_hours ?? 'N/D') . ' horas' }}
                             </p>
                             <p class="text-muted">
                                 <strong>Modalidad:</strong> {{ $enrollment->course->modality ?? 'Presencial' }}
                             </p>
                             <p class="text-muted flex-grow-1">
-                                {{ Str::limit($enrollment->course->description ?? 'DescripciÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³n no disponible.', 140) }}
+                                {{ Str::limit($enrollment->course->description ?? 'Descripción no disponible.', 140) }}
                             </p>
                             <div class="d-flex gap-2 mt-3">
                                 <a href="{{ route('courses.show', $enrollment->course_id) }}" class="btn btn-primary flex-fill"
                                    style="background-color:#1e40af;">Ver curso</a>
-                                <button class="btn btn-outline-secondary flex-fill" type="button">
+                                <button class="btn btn-outline-secondary flex-fill" type="button" disabled>
                                     Descargar certificado
                                 </button>
+                            </div>
+                            <div class="mt-3">
+                                <form method="POST" action="{{ route('support-requests.store') }}">
+                                    @csrf
+                                    <input type="hidden" name="course_id" value="{{ $enrollment->course_id }}">
+                                    <div class="mb-2">
+                                        <label class="form-label text-muted small">Solicitar asesoría (costo adicional)</label>
+                                        <textarea name="message" class="form-control" rows="2" minlength="10" required
+                                                  placeholder="Ej: Necesito ayuda con el módulo 2 / dudas sobre impresión..."></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-outline-primary w-100" style="color:#1e40af; border-color:#1e40af;">
+                                        Solicitar asesor
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

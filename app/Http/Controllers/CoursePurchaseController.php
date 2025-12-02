@@ -38,7 +38,8 @@ class CoursePurchaseController extends Controller
                 'discount' => 0,
                 'total' => $course->price,
                 'payment_method' => $data['payment_method'],
-                'status' => 'Pagado',
+                // Usamos un estado permitido por el flujo de pedidos
+                'status' => 'Procesando',
                 'shipping_address' => 'Entrega digital - video',
             ]);
             \App\Support\AuditLogger::log('created', $order);

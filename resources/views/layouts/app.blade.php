@@ -6,7 +6,7 @@
     <title>@yield('title', 'Printex')</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
@@ -16,29 +16,40 @@
             --printex-secondary: #991b1b;
             --printex-neutral: #6b7280;
             --printex-accent: #f59e0b;
+            --printex-ink: #0b1026;
+            --printex-surface: #0f172a;
         }
 
         body {
-            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background-color: #f3f4f6;
-            color: #111827;
+            font-family: 'Space Grotesk', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            background: #f3f4f6;
+            color: #0f172a;
+            letter-spacing: 0.01em;
         }
 
         .btn-printex {
-            background-color: var(--printex-primary);
-            color: #fff;
+            background: linear-gradient(135deg, #1e40af 0%, #0f2b7b 100%);
+            color: #f8fafc;
+            border: none;
+            box-shadow: 0 10px 25px rgba(30, 64, 175, 0.4);
+            border-radius: 14px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
         }
 
         .btn-printex:hover {
-            background-color: #172b85;
+            transform: translateY(-1px);
             color: #fff;
+            box-shadow: 0 14px 32px rgba(30, 64, 175, 0.45);
         }
 
         /* Header */
         .printex-navbar {
-            background: linear-gradient(90deg, #102b7b 0%, #0a1f52 100%);
+            background: linear-gradient(120deg, rgba(15, 23, 42, 0.9), rgba(30, 64, 175, 0.9));
             color: #fff;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
         }
 
         .printex-navbar .navbar-brand,
@@ -59,17 +70,18 @@
         .printex-navbar .nav-link:focus,
         .printex-navbar .nav-link.active {
             opacity: 1;
+            color: #fff !important;
         }
 
         .printex-logo-mark {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #f97316 0%, #f59e0b 100%);
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            background: linear-gradient(160deg, #f59e0b 0%, #f97316 45%, #1e40af 100%);
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.25);
+            box-shadow: 0 12px 28px rgba(249, 115, 22, 0.35);
             color: #0f172a;
             font-weight: 900;
             font-size: 1.15rem;
@@ -90,13 +102,13 @@
             color: #fff;
             border: 1px solid rgba(255, 255, 255, 0.18);
             padding: 0.55rem 0.7rem;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.08);
             transition: background 0.2s ease, transform 0.2s ease;
         }
 
         .printex-cart-btn:hover {
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.16);
             transform: translateY(-1px);
         }
 
@@ -107,7 +119,7 @@
             font-weight: 700;
             letter-spacing: 0.04em;
             padding: 0.55rem 1rem;
-            border-radius: 12px;
+            border-radius: 14px;
             box-shadow: 0 12px 30px rgba(249, 115, 22, 0.35);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
@@ -150,6 +162,27 @@
         .product-img::after {
             background: transparent !important;
             box-shadow: none !important;
+        }
+
+        .bg-white {
+            color: #0f172a;
+        }
+
+        /* Surfaces claras por defecto */
+        .product-card,
+        .course-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .product-card:hover,
+        .course-card:hover {
+            border-color: rgba(30, 64, 175, 0.35);
+            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
         }
     </style>
     @stack('styles')

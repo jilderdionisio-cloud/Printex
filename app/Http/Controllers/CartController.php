@@ -11,16 +11,20 @@ class CartController extends Controller
 {
     public function index(): View
     {
-        $cart = session('cart', []);
+        $cart = collect(session('cart', []));
 
         return view('cart.index', [
             'cartItems' => $cart,
-            'summary' => $this->summary($cart),
+            'summary' => $this->summary($cart->all()),
         ]);
     }
 
     public function add(Request $request): RedirectResponse
     {
+        if (! $request->user()) {
+            return redirect()->route('login');
+        }
+
         $validated = $request->validate([
             'type' => ['required', 'in:product'],
             'product_id' => ['required', 'integer', 'exists:products,id'],

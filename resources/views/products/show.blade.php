@@ -50,26 +50,34 @@
                     <li class="mb-0"><strong>Actualizado:</strong> {{ $product->updated_at?->diffForHumans() ?? 'N/D' }}</li>
                 </ul>
 
-                <form method="POST" action="{{ route('cart.add') }}" class="mt-auto">
-                    @csrf
-                    <input type="hidden" name="type" value="product">
-                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                    <div class="row g-3 mb-3">
-                        <div class="col-12 col-md-4">
-                            <label class="form-label text-muted small text-uppercase">Cantidad</label>
-                            <input type="number" name="quantity" value="1" min="1" max="{{ $product->stock ?? 1 }}"
-                                   class="form-control">
+                @auth
+                    <form method="POST" action="{{ route('cart.add') }}" class="mt-auto">
+                        @csrf
+                        <input type="hidden" name="type" value="product">
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <div class="row g-3 mb-3">
+                            <div class="col-12 col-md-4">
+                                <label class="form-label text-muted small text-uppercase">Cantidad</label>
+                                <input type="number" name="quantity" value="1" min="1" max="{{ $product->stock ?? 1 }}"
+                                       class="form-control">
+                            </div>
                         </div>
+                        <div class="d-flex flex-column flex-md-row gap-3">
+                            <button type="submit" class="btn btn-lg btn-primary flex-fill" style="background-color:#1e40af;">
+                                Añadir al carrito
+                            </button>
+                            <button type="button" class="btn btn-lg btn-outline-secondary flex-fill">
+                                Agregar a favoritos
+                            </button>
+                        </div>
+                    </form>
+                @else
+                    <div class="mt-auto">
+                        <a href="{{ route('login') }}" class="btn btn-lg btn-primary w-100" style="background-color:#1e40af;">
+                            Inicia sesión para comprar
+                        </a>
                     </div>
-                    <div class="d-flex flex-column flex-md-row gap-3">
-                        <button type="submit" class="btn btn-lg btn-primary flex-fill" style="background-color:#1e40af;">
-                            Añadir al carrito
-                        </button>
-                        <button type="button" class="btn btn-lg btn-outline-secondary flex-fill">
-                            Agregar a favoritos
-                        </button>
-                    </div>
-                </form>
+                @endauth
             </div>
         </div>
     </div>
