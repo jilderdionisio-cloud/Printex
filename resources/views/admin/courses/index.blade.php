@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Cursos | Admin')
 
@@ -22,7 +22,7 @@
                             <th>ID</th>
                             <th>Nombre</th>
                             <th>Modalidad</th>
-                            <th>Duración</th>
+                            <th>Duración (horas)</th>
                             <th>Cupos</th>
                             <th>Precio</th>
                             <th></th>
@@ -34,7 +34,7 @@
                                 <td>{{ $course->id }}</td>
                                 <td>{{ $course->name }}</td>
                                 <td>{{ $course->modality }}</td>
-                                <td>{{ $course->duration }}</td>
+                                <td>{{ $course->duration_hours . " h" }}</td>
                                 <td>{{ $course->slots }}</td>
                                 <td>S/ {{ number_format($course->price, 2) }}</td>
                                 <td class="text-end">
@@ -65,3 +65,4 @@
         </div>
     </div>
 @endsection
+

@@ -15,11 +15,18 @@ class Product extends Model
 
     protected $fillable = [
         'category_id',
+        'supplier_id',
         'name',
         'description',
         'price',
         'stock',
         'image',
+        'purchase_count',
+    ];
+
+    protected $casts = [
+        'purchase_count' => 'integer',
+        'price' => 'decimal:2',
     ];
 
     public function category(): BelongsTo
@@ -27,9 +34,20 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(Supplier::class);
+    }
+
     public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    // Productos más vendidos (por cantidad de compras)
+    public function scopeTopPurchased($query, int $limit = 5)
+    {
+        return $query->orderByDesc('purchase_count')->take($limit);
     }
 
     public function getImageUrlAttribute(): ?string

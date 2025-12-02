@@ -49,6 +49,7 @@
                             <th>ID</th>
                             <th>Nombre</th>
                             <th>Categoría</th>
+                            <th>Proveedor</th>
                             <th class="text-end">Precio</th>
                             <th class="text-center">Stock</th>
                             <th></th>
@@ -60,6 +61,7 @@
                                 <td>{{ $product->id }}</td>
                                 <td>{{ $product->name }}</td>
                                 <td>{{ $product->category->name ?? 'Sin categoría' }}</td>
+                                <td>{{ $product->supplier->name ?? 'Sin proveedor' }}</td>
                                 <td class="text-end">S/ {{ number_format($product->price, 2) }}</td>
                                 <td class="text-center">{{ $product->stock }}</td>
                                 <td class="text-end">

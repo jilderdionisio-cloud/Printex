@@ -17,10 +17,10 @@ class OrderController extends Controller
 
         return view('admin.orders.index', compact('orders'));
     }
-    //Ver un pedido específico
+    //Ver un pedido especÃ­fico
     public function show(int $id): View
     {
-        $order = Order::with(['user', 'items.product'])->findOrFail($id);
+        $order = Order::with(['user', 'items.product', 'items.course'])->findOrFail($id);
 
         return view('admin.orders.show', compact('order'));
     }
@@ -37,6 +37,7 @@ class OrderController extends Controller
         $order->status = $data['status'];
         $order->notes = $data['notes'] ?? null;
         $order->save();
+        \App\Support\AuditLogger::log('status_updated', $order);
 
         return back()->with('status', 'Estado del pedido actualizado.');
     }

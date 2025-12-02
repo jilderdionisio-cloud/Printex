@@ -96,12 +96,13 @@
                                 <a href="{{ route('products.show', $product->id) }}" class="btn btn-sm btn-outline-secondary flex-fill">
                                     Ver detalle
                                 </a>
-                                <form method="POST" action="{{ route('cart.add') }}" class="flex-fill">
-                                    @csrf
-                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                    <button type="submit" class="btn btn-sm btn-primary w-100" style="background-color:#1e40af;">
-                                        Añadir al carrito
-                                    </button>
+                                    <form method="POST" action="{{ route('cart.add') }}" class="flex-fill">
+                                        @csrf
+                                        <input type="hidden" name="type" value="product">
+                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                        <button type="submit" class="btn btn-sm btn-primary w-100" style="background-color:#1e40af;">
+                                            Añadir al carrito
+                                        </button>
                                 </form>
                             </div>
                         </div>

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Inscripción #' . $enrollment->id)
 
@@ -32,7 +32,7 @@
                     <h5 class="fw-bold mb-3">Curso</h5>
                     <p class="mb-1"><strong>Nombre:</strong> {{ $enrollment->course->name }}</p>
                     <p class="mb-1"><strong>Modalidad:</strong> {{ $enrollment->course->modality }}</p>
-                    <p class="mb-1"><strong>Duración:</strong> {{ $enrollment->course->duration }}</p>
+                    <p class="mb-1"><strong>Duración:</strong> {{ $enrollment->course->duration_hours . " horas" }}</p>
                     <p class="mb-0"><strong>Instructor:</strong> {{ $enrollment->course->instructor }}</p>
                 </div>
             </div>
@@ -64,3 +64,4 @@
         </div>
     </div>
 @endsection
+

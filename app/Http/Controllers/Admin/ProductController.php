@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Supplier;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -16,7 +17,7 @@ class ProductController extends Controller
     //Mostrar la lista de productos
     public function index(Request $request): View
     {
-        $query = Product::with('category');
+        $query = Product::with(['category', 'supplier']);
 
         if ($search = $request->string('search')->toString()) {
             $query->where('name', 'like', '%' . $search . '%');
@@ -44,14 +45,16 @@ class ProductController extends Controller
     {
         $this->ensureDefaultCategory();
         $categories = Category::orderBy('name')->get();
+        $suppliers = Supplier::orderBy('name')->get();
 
-        return view('admin.products.create', compact('categories'));
+        return view('admin.products.create', compact('categories', 'suppliers'));
     }
     //Guardar un producto nuevo
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
             'category_id' => ['required', 'exists:categories,id'],
+            'supplier_id' => ['required', 'exists:suppliers,id'],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
@@ -63,7 +66,8 @@ class ProductController extends Controller
             $data['image'] = $request->file('image')->store('products', 'public');
         }
 
-        Product::create($data);
+        $product = Product::create($data);
+        \App\Support\AuditLogger::log('created', $product);
 
         return redirect()->route('admin.products.index')->with('status', 'Producto creado correctamente.');
     }
@@ -73,8 +77,9 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $this->ensureDefaultCategory();
         $categories = Category::orderBy('name')->get();
+        $suppliers = Supplier::orderBy('name')->get();
 
-        return view('admin.products.edit', compact('product', 'categories'));
+        return view('admin.products.edit', compact('product', 'categories', 'suppliers'));
     }
     //Guardar cambios de un producto
     public function update(Request $request, int $id): RedirectResponse
@@ -83,6 +88,7 @@ class ProductController extends Controller
 
         $data = $request->validate([
             'category_id' => ['required', 'exists:categories,id'],
+            'supplier_id' => ['required', 'exists:suppliers,id'],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
@@ -98,13 +104,16 @@ class ProductController extends Controller
         }
 
         $product->update($data);
+        \App\Support\AuditLogger::log('updated', $product);
 
         return redirect()->route('admin.products.index')->with('status', 'Producto actualizado correctamente.');
     }
-    //Borrar un producto
+   //Borrar un producto
     public function destroy(int $id): RedirectResponse
     {
-        Product::whereKey($id)->delete();
+        $product = Product::findOrFail($id);
+        $product->delete();
+        \App\Support\AuditLogger::log('deleted', $product);
 
         return redirect()->route('admin.products.index')->with('status', 'Producto eliminado.');
     }

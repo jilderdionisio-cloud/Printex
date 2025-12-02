@@ -52,6 +52,7 @@
 
                 <form method="POST" action="{{ route('cart.add') }}" class="mt-auto">
                     @csrf
+                    <input type="hidden" name="type" value="product">
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                     <div class="row g-3 mb-3">
                         <div class="col-12 col-md-4">

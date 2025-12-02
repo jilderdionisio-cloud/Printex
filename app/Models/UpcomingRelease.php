@@ -5,27 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Product;
-use App\Models\Course;
 
-class OrderItem extends Model
+class UpcomingRelease extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'order_id',
+        'type',
+        'title',
+        'description',
+        'release_date',
+        'status',
         'product_id',
         'course_id',
-        'name',
-        'quantity',
-        'price',
-        'item_type',
     ];
 
-    public function order(): BelongsTo
-    {
-        return $this->belongsTo(Order::class);
-    }
+    protected $casts = [
+        'release_date' => 'date',
+    ];
 
     public function product(): BelongsTo
     {

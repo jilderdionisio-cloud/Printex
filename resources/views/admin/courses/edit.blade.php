@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Editar curso | Admin')
 
@@ -58,8 +58,8 @@
                     <input type="number" step="0.01" name="price" class="form-control" value="{{ old('price', $course->price) }}" required>
                 </div>
                 <div class="col-12 col-md-4">
-                    <label class="form-label">Duración</label>
-                    <input type="text" name="duration" class="form-control" value="{{ old('duration', $course->duration) }}" required>
+                    <label class="form-label">Duración (horas)</label>
+                    <input type="number" name="duration_hours" class="form-control" value="{{ old('duration_hours', $course->duration_hours) }}" required>
                 </div>
                 <div class="col-12 col-md-4">
                     <label class="form-label">Modalidad</label>
@@ -102,3 +102,5 @@
         </div>
     </div>
 @endsection
+
+

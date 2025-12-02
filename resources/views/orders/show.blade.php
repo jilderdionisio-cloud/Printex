@@ -77,8 +77,15 @@
                 </thead>
                 <tbody>
                     @foreach ($order->items as $item)
+                        @php
+                            $itemName = $item->product->name ?? $item->course->name ?? $item->name;
+                            $itemType = $item->item_type ?? ($item->course_id ? 'course' : 'product');
+                        @endphp
                         <tr>
-                            <td>{{ $item->product->name ?? $item->name }}</td>
+                            <td>
+                                {{ $itemName }}
+                                <small class="text-muted d-block">{{ $itemType === 'course' ? 'Curso' : 'Producto' }}</small>
+                            </td>
                             <td class="text-center">{{ $item->quantity }}</td>
                             <td class="text-end">S/ {{ number_format($item->price, 2) }}</td>
                             <td class="text-end">S/ {{ number_format($item->price * $item->quantity, 2) }}</td>

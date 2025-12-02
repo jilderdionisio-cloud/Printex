@@ -6,6 +6,8 @@ use App\Models\Course;
 use App\Models\CourseEnrollment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Support\AuditLogger;
 
 class CourseEnrollmentController extends Controller
 {
@@ -22,13 +24,14 @@ class CourseEnrollmentController extends Controller
 
         CourseEnrollment::create([
             'course_id' => $course->id,
-            
+            'user_id' => Auth::id(),
             'student_name' => $data['student_name'],
             'student_email' => $data['student_email'],
             'student_phone' => $data['student_phone'],
             'student_address' => $data['student_address'],
             'status' => 'Activo',
         ]);
+        AuditLogger::log('enrolled_manual', $course);
 
         return redirect()
             ->route('courses.show', $course->id)

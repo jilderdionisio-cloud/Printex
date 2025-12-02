@@ -14,7 +14,7 @@ class CartController extends Controller
         $cart = session('cart', []);
 
         return view('cart.index', [
-            'cartItems' => collect($cart)->values(),
+            'cartItems' => $cart,
             'summary' => $this->summary($cart),
         ]);
     }
@@ -22,25 +22,34 @@ class CartController extends Controller
     public function add(Request $request): RedirectResponse
     {
         $validated = $request->validate([
+            'type' => ['required', 'in:product'],
             'product_id' => ['required', 'integer', 'exists:products,id'],
             'quantity' => ['nullable', 'integer', 'min:1'],
         ]);
 
-        $product = Product::with('category')->findOrFail($validated['product_id']);
+        $type = $validated['type'];
+        if ($type !== 'product') {
+            return back()->withErrors('Los cursos o videos se adquieren directamente desde su boton "Adquirir video".');
+        }
+
         $quantity = $validated['quantity'] ?? 1;
         $cart = session('cart', []);
 
-        $cart[$product->id] = [
+        $product = Product::with('category')->findOrFail($validated['product_id']);
+        $key = "product-{$product->id}";
+        $cart[$key] = [
+            'type' => 'product',
             'product' => $product,
-            'quantity' => ($cart[$product->id]['quantity'] ?? 0) + $quantity,
+            'quantity' => ($cart[$key]['quantity'] ?? 0) + $quantity,
         ];
+        $message = 'Producto agregado al carrito.';
 
         session(['cart' => $cart]);
 
-        return back()->with('status', 'Producto agregado al carrito.');
+        return back()->with('status', $message);
     }
 
-    public function update(Request $request, int $productId): RedirectResponse
+    public function update(Request $request, string $itemKey): RedirectResponse
     {
         $quantity = $request->validate([
             'quantity' => ['required', 'integer', 'min:1'],
@@ -48,18 +57,18 @@ class CartController extends Controller
 
         $cart = session('cart', []);
 
-        if (isset($cart[$productId])) {
-            $cart[$productId]['quantity'] = $quantity;
+        if (isset($cart[$itemKey])) {
+            $cart[$itemKey]['quantity'] = $quantity;
             session(['cart' => $cart]);
         }
 
         return back()->with('status', 'Cantidad actualizada.');
     }
 
-    public function remove(int $productId): RedirectResponse
+    public function remove(string $itemKey): RedirectResponse
     {
         $cart = session('cart', []);
-        unset($cart[$productId]);
+        unset($cart[$itemKey]);
         session(['cart' => $cart]);
 
         return back()->with('status', 'Producto eliminado del carrito.');
@@ -74,7 +83,10 @@ class CartController extends Controller
 
     private function summary(array $cart): array
     {
-        $subtotal = collect($cart)->sum(fn ($item) => $item['product']->price * $item['quantity']);
+        $subtotal = collect($cart)->sum(function ($item) {
+            $price = $item['product']->price ?? 0;
+            return $price * ($item['quantity'] ?? 1);
+        });
 
         return [
             'subtotal' => $subtotal,
