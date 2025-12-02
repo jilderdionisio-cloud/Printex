@@ -20,7 +20,7 @@
                 </div>
                 <div class="modal-body">
                     <p class="text-muted small mb-3">
-                        Para descargar el video debes completar el pago. Recibirás acceso inmediato tras confirmar.
+                        Completa el pago para habilitar tu acceso al curso en "Mis cursos".
                     </p>
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <span class="fw-bold">{{ $course->name }}</span>
@@ -28,7 +28,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Método de pago</label>
-                        <select name="payment_method" class="form-select" required>
+                        <select name="payment_method" class="form-select" required data-payment-method>
                             <option value="">Selecciona</option>
                             <option value="tarjeta">Tarjeta</option>
                             <option value="yape-plin">Yape / Plin</option>
@@ -36,24 +36,53 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Referencia del pago</label>
+                        <label class="form-label" data-payment-label>Referencia del pago</label>
                         <input type="text"
                                name="payment_reference"
                                class="form-control"
+                               data-payment-input
                                placeholder="Código de operación o últimos 4 de la tarjeta">
                     </div>
                     <div class="alert alert-info d-flex align-items-center gap-2 py-2">
                         <span class="fw-bold">Importante:</span>
-                        <span class="small mb-0">No se usa el carrito. Este pago es solo para el video seleccionado.</span>
+                        <span class="small mb-0">No se usa el carrito. Este pago es solo para el curso seleccionado.</span>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="submit" class="btn btn-primary">
-                        Pagar y descargar video
+                        Pagar
                     </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-payment-method]').forEach(select => {
+        select.addEventListener('change', (e) => {
+            const form = e.target.closest('form');
+            const label = form.querySelector('[data-payment-label]');
+            const input = form.querySelector('[data-payment-input]');
+            const val = e.target.value;
+            if (val === 'yape-plin') {
+                label.textContent = 'Número de Yape/Plin';
+                input.placeholder = 'Número de celular asociado';
+            } else if (val === 'tarjeta') {
+                label.textContent = 'Número de tarjeta';
+                input.placeholder = '**** **** **** 1234';
+            } else if (val === 'transferencia') {
+                label.textContent = 'Referencia de transferencia';
+                input.placeholder = 'Código o número de operación';
+            } else {
+                label.textContent = 'Referencia del pago';
+                input.placeholder = '';
+            }
+        });
+    });
+});
+</script>
+@endpush

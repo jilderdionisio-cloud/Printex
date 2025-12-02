@@ -11,13 +11,11 @@ class HomeController extends Controller
     public function index(): View
     {
         $products = Product::with('category')
-            ->orderByDesc('purchase_count')
             ->latest()
             ->take(6)
             ->get();
 
-        $courses = Course::orderByDesc('enrollment_count')
-            ->latest()
+        $courses = Course::latest()
             ->take(3)
             ->get();
 
