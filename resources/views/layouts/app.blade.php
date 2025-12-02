@@ -138,6 +138,7 @@
             filter: invert(1);
         }
 
+
         /* Asegura que las imágenes de productos no tengan velos u overlays */
         .ratio img,
         .product-img img,
@@ -170,5 +171,7 @@
             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
             crossorigin="anonymous"></script>
     @stack('scripts')
+
+    @include('components.printbot')
 </body>
 </html>

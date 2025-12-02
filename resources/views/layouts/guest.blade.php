@@ -151,6 +151,27 @@
             background: transparent !important;
             box-shadow: none !important;
         }
+
+        .chat-fab {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1050;
+            border-radius: 999px;
+            box-shadow: 0 14px 30px rgba(0,0,0,0.18);
+            background: linear-gradient(135deg, #102b7b, #0a1f52);
+            color: #fff;
+            padding: 0.9rem 1.2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .chat-fab:hover {
+            color: #fff;
+            transform: translateY(-1px);
+        }
     </style>
     @stack('styles')
 </head>
@@ -169,5 +190,7 @@
             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
             crossorigin="anonymous"></script>
     @stack('scripts')
+
+    @include('components.printbot')
 </body>
 </html>
