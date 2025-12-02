@@ -1,4 +1,4 @@
-@extends('layouts.guest')
+﻿@extends('layouts.guest')
 
 @section('title', 'Inicio | Printex')
 
@@ -34,11 +34,6 @@
         align-items: flex-start;
         justify-content: center;
         padding-top: 3.5rem;
-        padding-bottom: 3.5rem;
-        padding-left: clamp(1.25rem, calc((100vw - 1140px) / 2 - 36px), 4.5rem);
-        padding-right: max(2rem, calc((100vw - 1140px) / 2));
-        flex-direction: column;
-        gap: 1.5rem;
     }
     .hero-inner {
         max-width: 760px;
@@ -317,6 +312,7 @@
                                         <a href="{{ route('products.show', $product->id) }}" class="btn btn-outline-primary btn-sm">Ver</a>
                                         <form method="POST" action="{{ route('cart.add') }}">
                                             @csrf
+                                            <input type="hidden" name="type" value="product">
                                             <input type="hidden" name="product_id" value="{{ $product->id }}">
                                             <button class="btn btn-primary btn-sm">Agregar</button>
                                         </form>
@@ -361,13 +357,24 @@
                                     <div class="course-body">
                                 <div class="d-flex align-items-center gap-2 mb-2">
                                     <span class="badge bg-warning text-dark">{{ $course->modality ?? 'Online' }}</span>
-                                    <small class="text-muted">{{ $course->duration ?? 'Flexible' }}</small>
+                                    <small class="text-muted">{{ ($course->duration_hours ?? 'N/D') . ' h' }}</small>
                                 </div>
                                 <h5 class="fw-bold mb-2">{{ $course->name }}</h5>
                                 <p class="text-muted small mb-3">{{ \Illuminate\Support\Str::limit($course->description ?? 'Aprende con instructores expertos.', 80) }}</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="price text-primary fw-bold">S/ {{ number_format($course->price, 2) }}</span>
-                                    <a href="{{ route('courses.show', $course->id) }}" class="btn btn-outline-primary btn-sm">Ver mas</a>
+                                    <div class="d-flex gap-2">
+                                        <a href="{{ route('courses.show', $course->id) }}" class="btn btn-outline-primary btn-sm">Ver más</a>
+                                        @auth
+                                            @include('courses.partials.purchase-modal', [
+                                                'course' => $course,
+                                                'buttonClass' => 'btn btn-primary btn-sm',
+                                                'buttonLabel' => 'Adquirir video',
+                                            ])
+                                        @else
+                                            <a href="{{ route('login') }}" class="btn btn-primary btn-sm" style="background-color:#1e40af;">Inicia sesi�n</a>
+                                        @endauth
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -385,3 +392,5 @@
         </div>
     </section>
 @endsection
+
+

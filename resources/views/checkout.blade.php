@@ -29,10 +29,17 @@
                             </thead>
                             <tbody>
                             @foreach ($cartItems ?? [] as $item)
+                                @php
+                                    $isCourse = ($item['type'] ?? 'product') === 'course';
+                                    $model = $isCourse ? ($item['course'] ?? null) : ($item['product'] ?? null);
+                                    $name = $model->name ?? ($isCourse ? 'Curso' : 'Producto');
+                                    $price = $model->price ?? 0;
+                                    $quantity = $isCourse ? 1 : ($item['quantity'] ?? 1);
+                                @endphp
                                 <tr>
-                                    <td>{{ $item['product']->name }}</td>
-                                    <td class="text-center">{{ $item['quantity'] }}</td>
-                                    <td class="text-end">S/ {{ number_format($item['product']->price * $item['quantity'], 2) }}</td>
+                                    <td>{{ $name }}</td>
+                                    <td class="text-center">{{ $quantity }}</td>
+                                    <td class="text-end">S/ {{ number_format($price * $quantity, 2) }}</td>
                                 </tr>
                             @endforeach
                             </tbody>

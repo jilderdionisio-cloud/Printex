@@ -31,6 +31,18 @@
                     <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
                 </div>
                 <div class="col-12 col-lg-6">
+                    <label class="form-label">Proveedor</label>
+                    <select name="supplier_id" class="form-select" required @disabled($suppliers->isEmpty())>
+                        <option value="">{{ $suppliers->isEmpty() ? 'No hay proveedores disponibles' : 'Seleccione' }}</option>
+                        @foreach ($suppliers as $supplier)
+                            <option value="{{ $supplier->id }}" @selected(old('supplier_id') == $supplier->id)>{{ $supplier->name }}</option>
+                        @endforeach
+                    </select>
+                    @if ($suppliers->isEmpty())
+                        <small class="text-danger">Primero crea un proveedor para poder registrar productos.</small>
+                    @endif
+                </div>
+                <div class="col-12 col-lg-6">
                     <label class="form-label">Categoría</label>
                     <select name="category_id" class="form-select" required @disabled($categories->isEmpty())>
                         <option value="">{{ $categories->isEmpty() ? 'No hay categorías disponibles' : 'Seleccione' }}</option>

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+﻿@extends('layouts.admin')
 
 @section('title', 'Nuevo curso | Admin')
 
@@ -6,7 +6,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="fw-bold mb-1">Nuevo curso</h1>
-            <p class="text-muted mb-0">Define la información para publicar el curso.</p>
+            <p class="text-muted mb-0">Define la informaciÃ³n para publicar el curso.</p>
         </div>
         <a href="{{ route('admin.courses.index') }}" class="btn btn-outline-secondary">Volver</a>
     </div>
@@ -49,7 +49,7 @@
                     @endif
                 </div>
                 <div class="col-12">
-                    <label class="form-label">Descripción</label>
+                    <label class="form-label">DescripciÃ³n</label>
                     <textarea name="description" rows="4" class="form-control">{{ old('description') }}</textarea>
                 </div>
                 <div class="col-12 col-md-4">
@@ -57,15 +57,15 @@
                     <input type="number" step="0.01" name="price" class="form-control" value="{{ old('price') }}" required>
                 </div>
                 <div class="col-12 col-md-4">
-                    <label class="form-label">Duración</label>
-                    <input type="text" name="duration" class="form-control" value="{{ old('duration') }}" required>
+                    <label class="form-label">Duración (horas)</label>
+                    <input type="number" name="duration_hours" class="form-control" value="{{ old('duration_hours') }}" min="1" step="1" required>
                 </div>
                 <div class="col-12 col-md-4">
                     <label class="form-label">Modalidad</label>
                     <select name="modality" class="form-select" required>
                         <option value="Presencial" @selected(old('modality') === 'Presencial')>Presencial</option>
                         <option value="Virtual" @selected(old('modality') === 'Virtual')>Virtual</option>
-                        <option value="Híbrido" @selected(old('modality') === 'Híbrido')>Híbrido</option>
+                        <option value="HÃ­brido" @selected(old('modality') === 'HÃ­brido')>HÃ­brido</option>
                     </select>
                 </div>
                 <div class="col-12 col-md-4">
@@ -75,7 +75,7 @@
                 <div class="col-12 col-md-4">
                     <label class="form-label">Imagen</label>
                     <input type="file" name="image" class="form-control" accept="image/*">
-                    <small class="text-muted">Formatos permitidos: JPG, PNG, WebP. Máx 2MB.</small>
+                    <small class="text-muted">Formatos permitidos: JPG, PNG, WebP. MÃ¡x 2MB.</small>
                 </div>
                 <div class="col-12 d-flex justify-content-end">
                     <button type="submit" class="btn btn-primary" style="background-color:#1e40af;">
@@ -86,3 +86,5 @@
         </div>
     </div>
 @endsection
+
+

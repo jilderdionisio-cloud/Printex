@@ -11,7 +11,7 @@ class OrderController extends Controller
 {
     public function index(Request $request): View
     {
-        $orders = Order::with(['items.product', 'user'])
+        $orders = Order::with(['items.product', 'items.course', 'user'])
             ->where('user_id', $request->user()->id)
             ->latest()
             ->paginate(10);
@@ -21,7 +21,7 @@ class OrderController extends Controller
 
     public function show(Request $request, int $id): View
     {
-        $order = Order::with(['items.product', 'user'])
+        $order = Order::with(['items.product', 'items.course', 'user'])
             ->where('user_id', $request->user()->id)
             ->findOrFail($id);
 

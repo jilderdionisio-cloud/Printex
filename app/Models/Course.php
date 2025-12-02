@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Models\CourseEnrollment;
 
 class Course extends Model
 {
@@ -16,16 +17,29 @@ class Course extends Model
         'name',
         'description',
         'price',
-        'duration',
+        'duration_hours',
         'modality',
         'slots',
         'instructor',
         'image',
+        'enrollment_count',
+    ];
+
+    protected $casts = [
+        'duration_hours' => 'integer',
+        'price' => 'decimal:2',
+        'enrollment_count' => 'integer',
     ];
 
     public function enrollments(): HasMany
     {
         return $this->hasMany(CourseEnrollment::class);
+    }
+
+    // Cursos con más inscripciones
+    public function scopeTopEnrolled($query, int $limit = 5)
+    {
+        return $query->orderByDesc('enrollment_count')->take($limit);
     }
 
     public function getImageUrlAttribute(): ?string
@@ -38,6 +52,6 @@ class Course extends Model
             return $this->image;
         }
 
-        return Storage::disk('public')->url($this->image);
+        return asset('storage/' . $this->image);
     }
 }

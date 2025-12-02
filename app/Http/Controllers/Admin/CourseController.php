@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\User;
+use App\Support\AuditLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -34,7 +35,7 @@ class CourseController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
-            'duration' => ['required', 'string', 'max:100'],
+            'duration_hours' => ['required', 'integer', 'min:1'],
             'modality' => ['required', 'string', 'max:50'],
             'slots' => ['required', 'integer', 'min:1'],
             'instructor' => ['required', 'string', 'max:255'],
@@ -45,7 +46,8 @@ class CourseController extends Controller
             $data['image'] = $request->file('image')->store('courses', 'public');
         }
 
-        Course::create($data);
+        $course = Course::create($data);
+        AuditLogger::log('created', $course);
 
         return redirect()->route('admin.courses.index')->with('status', 'Curso creado correctamente.');
     }
@@ -66,7 +68,7 @@ class CourseController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
-            'duration' => ['required', 'string', 'max:100'],
+            'duration_hours' => ['required', 'integer', 'min:1'],
             'modality' => ['required', 'string', 'max:50'],
             'slots' => ['required', 'integer', 'min:1'],
             'instructor' => ['required', 'string', 'max:255'],
@@ -81,13 +83,16 @@ class CourseController extends Controller
         }
 
         $course->update($data);
+        AuditLogger::log('updated', $course);
 
         return redirect()->route('admin.courses.index')->with('status', 'Curso actualizado correctamente.');
     }
    //Borrar un curso
     public function destroy(int $id): RedirectResponse
     {
-        Course::whereKey($id)->delete();
+        $course = Course::findOrFail($id);
+        $course->delete();
+        AuditLogger::log('deleted', $course);
 
         return redirect()->route('admin.courses.index')->with('status', 'Curso eliminado.');
     }

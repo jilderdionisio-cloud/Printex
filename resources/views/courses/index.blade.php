@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Cursos | Printex')
 
@@ -48,7 +48,7 @@
                             <small class="text-muted">Cupos: {{ $course->slots ?? 'N/D' }}</small>
                         </div>
                         <h4 class="card-title">{{ $course->name }}</h4>
-                        <p class="text-muted mb-1"><strong>Duración:</strong> {{ $course->duration }}</p>
+                        <p class="text-muted mb-1"><strong>Duración (horas):</strong> {{ $course->duration_hours }}</p>
                         <p class="text-primary fw-bold mb-4" style="color:#1e40af !important;">
                             S/ {{ number_format($course->price, 2) }}
                         </p>
@@ -58,12 +58,17 @@
                         <div class="mt-3 d-flex flex-column gap-2">
                             <a href="{{ route('courses.show', $course->id) }}" class="btn btn-primary"
                                style="background-color:#1e40af;">Ver detalles</a>
-                            <form method="POST" action="{{ route('courses.enroll', $course->id) }}">
-                                @csrf
-                                <button type="submit" class="btn btn-outline-secondary w-100">
-                                    Inscribirme
-                                </button>
-                            </form>
+                            @auth
+                                @include('courses.partials.purchase-modal', [
+                                    'course' => $course,
+                                    'buttonClass' => 'btn btn-outline-secondary w-100',
+                                    'buttonLabel' => 'Adquirir video',
+                                ])
+                            @else
+                                <a href="{{ route('login') }}" class="btn btn-outline-secondary w-100">
+                                    Inicia sesión para adquirir
+                                </a>
+                            @endauth
                         </div>
                     </div>
                 </div>
@@ -81,3 +86,4 @@
         @endforelse
     </div>
 @endsection
+
