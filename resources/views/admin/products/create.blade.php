@@ -44,17 +44,24 @@
                 </div>
                 <div class="col-12 col-lg-6">
                     <label class="form-label">Categoría</label>
-                    <select name="category_id" class="form-select" required @disabled($categories->isEmpty())>
+                    <select name="category_id" id="categorySelect" class="form-select" required @disabled($categories->isEmpty())>
                         <option value="">{{ $categories->isEmpty() ? 'No hay categorías disponibles' : 'Seleccione' }}</option>
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}" @selected(old('category_id') == $category->id)>
                                 {{ $category->name }}
                             </option>
                         @endforeach
+                        <option value="new" @selected(old('category_id') === 'new')>+ Nueva categoría</option>
                     </select>
                     @if ($categories->isEmpty())
                         <small class="text-danger">Primero crea una categoría para poder registrar productos.</small>
                     @endif
+                    <div id="newCategoryFields" class="mt-3" style="display: none;">
+                        <label class="form-label">Nombre de nueva categoría</label>
+                        <input type="text" name="category_name_new" class="form-control mb-2" value="{{ old('category_name_new') }}">
+                        <label class="form-label">Descripción (opcional)</label>
+                        <input type="text" name="category_description_new" class="form-control" value="{{ old('category_description_new') }}">
+                    </div>
                 </div>
                 <div class="col-12">
                     <label class="form-label">Descripción</label>
@@ -81,4 +88,23 @@
             </form>
         </div>
     </div>
+
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const select = document.getElementById('categorySelect');
+                const newFields = document.getElementById('newCategoryFields');
+
+                function toggleNewCategory() {
+                    const isNew = select.value === 'new';
+                    newFields.style.display = isNew ? 'block' : 'none';
+                }
+
+                if (select && newFields) {
+                    toggleNewCategory();
+                    select.addEventListener('change', toggleNewCategory);
+                }
+            });
+        </script>
+    @endpush
 @endsection

@@ -40,9 +40,11 @@ class ProductController extends Controller
 
     public function show(int $id): View
     {
-        $product = Product::findOrFail($id);
+        $product = Product::with(['category', 'supplier', 'reviews.user'])->findOrFail($id);
         $relatedProducts = Product::where('id', '!=', $product->id)->latest()->take(4)->get();
+        $averageRating = round($product->reviews->avg('rating'), 1);
+        $reviews = $product->reviews->sortByDesc('created_at');
 
-        return view('products.show', compact('product', 'relatedProducts'));
+        return view('products.show', compact('product', 'relatedProducts', 'averageRating', 'reviews'));
     }
 }

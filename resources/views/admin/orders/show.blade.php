@@ -11,6 +11,59 @@
         <a href="{{ route('admin.orders.index') }}" class="btn btn-outline-secondary">Volver</a>
     </div>
 
+    @php
+        $statusLower = strtolower($order->status ?? '');
+        $eta = ($order->created_at ?? now())->copy()->addDays(3);
+        $steps = [
+            [
+                'title' => 'Pedido confirmado',
+                'desc' => 'Pago exitoso, preparando el pedido.',
+                'done' => true,
+            ],
+            [
+                'title' => 'Producto empacado',
+                'desc' => 'El producto está siendo empacado.',
+                'done' => in_array($statusLower, ['procesando', 'enviado', 'entregado']),
+            ],
+            [
+                'title' => 'En camino',
+                'desc' => 'Salida a reparto. Entrega estimada antes del ' . $eta->format('d/m'),
+                'done' => in_array($statusLower, ['enviado', 'entregado']),
+            ],
+            [
+                'title' => 'Entregado',
+                'desc' => 'Pedido entregado al cliente.',
+                'done' => $statusLower === 'entregado',
+            ],
+        ];
+    @endphp
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="fw-bold mb-3">Progreso del pedido</h5>
+            <div class="position-relative" style="padding-left: 12px;">
+                <div class="position-absolute top-0 bottom-0 start-1 bg-light" style="width:2px; left: 6px;"></div>
+                @foreach ($steps as $step)
+                    <div class="d-flex align-items-start mb-3">
+                        <div class="me-3 mt-1">
+                            <span class="d-inline-flex align-items-center justify-content-center rounded-circle {{ $step['done'] ? 'bg-success text-white' : 'bg-light text-muted' }}" style="width: 26px; height: 26px;">
+                                @if ($step['done'])
+                                    <i class="bi bi-check-lg"></i>
+                                @else
+                                    <i class="bi bi-circle"></i>
+                                @endif
+                            </span>
+                        </div>
+                        <div>
+                            <p class="fw-semibold mb-1">{{ $step['title'] }}</p>
+                            <p class="text-muted mb-0 small">{{ $step['desc'] }}</p>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
     <div class="row g-4">
         <div class="col-12 col-lg-6">
             <div class="card border-0 shadow-sm h-100">

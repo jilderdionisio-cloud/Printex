@@ -11,8 +11,8 @@
     <div class="row g-4 mb-4">
         @foreach ([
             ['label' => 'Total ventas', 'value' => 'S/ ' . number_format($metrics['sales'] ?? 0, 2), 'icon' => 'bi-currency-dollar', 'text' => '+12% mensual'],
-            ['label' => 'Pedidos pendientes', 'value' => $metrics['pending_orders'] ?? 0, 'icon' => 'bi-bag', 'text' => 'Necesitan revisi&oacute;n'],
-            ['label' => 'Cursos activos', 'value' => $metrics['active_courses'] ?? 0, 'icon' => 'bi-journal-richtext', 'text' => 'M&aacute;s populares visibles'],
+            ['label' => 'Pedidos pendientes', 'value' => $metrics['pending_orders'] ?? 0, 'icon' => 'bi-bag', 'text' => 'Necesitan revisión'],
+            ['label' => 'Cursos activos', 'value' => $metrics['active_courses'] ?? 0, 'icon' => 'bi-journal-richtext', 'text' => 'Más populares visibles'],
             ['label' => 'Nuevos usuarios', 'value' => $metrics['new_users'] ?? 0, 'icon' => 'bi-people', 'text' => 'Últimos 30 días'],
         ] as $card)
             <div class="col-12 col-md-6 col-xl-3">
@@ -39,10 +39,10 @@
                             <h5 class="fw-bold mb-1">Ventas mensuales</h5>
                             <p class="text-muted small mb-0">Comparativa de los últimos 12 meses.</p>
                         </div>
-                        <button class="btn btn-sm btn-outline-secondary">Exportar</button>
+                        <button class="btn btn-sm btn-outline-secondary" type="button" onclick="window.print()">Exportar</button>
                     </div>
-                    <div class="ratio ratio-21x9 bg-light rounded-4 d-flex justify-content-center align-items-center text-muted">
-                        Gráfico de Chart.js (ventas)
+                    <div style="height: 320px;">
+                        <canvas id="salesChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -66,8 +66,8 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
                     <h5 class="fw-bold mb-3">Estados de pedidos</h5>
-                    <div class="ratio ratio-1x1 bg-light rounded-4 d-flex justify-content-center align-items-center text-muted">
-                        Gráfico de Chart.js (pedidos)
+                    <div style="height: 260px;">
+                        <canvas id="statusChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -75,4 +75,68 @@
     </div>
 @endsection
 
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const salesCtx = document.getElementById('salesChart');
+            const statusCtx = document.getElementById('statusChart');
 
+            const salesSeries = @json($salesSeries ?? []);
+            const statusSeries = @json($statusSeries ?? []);
+
+            if (salesCtx && salesSeries.length) {
+                const labels = salesSeries.map(item => item.label);
+                const data = salesSeries.map(item => item.total);
+
+                new Chart(salesCtx, {
+                    type: 'line',
+                    data: {
+                        labels,
+                        datasets: [{
+                            label: 'Ventas (S/)',
+                            data,
+                            borderColor: '#1e40af',
+                            backgroundColor: 'rgba(30, 64, 175, 0.12)',
+                            tension: 0.35,
+                            fill: true,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#1e40af',
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { callback: value => 'S/ ' + value }
+                            }
+                        }
+                    }
+                });
+            }
+
+            if (statusCtx && statusSeries.length) {
+                new Chart(statusCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: statusSeries.map(item => item.status),
+                        datasets: [{
+                            data: statusSeries.map(item => item.total),
+                            backgroundColor: ['#1e40af', '#f59e0b', '#10b981', '#ef4444', '#6b7280'],
+                            borderWidth: 1,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom' }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+@endpush

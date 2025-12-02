@@ -31,9 +31,9 @@
         position: absolute;
         inset: 0;
         display: flex;
-        align-items: flex-start;
-        justify-content: center;
-        padding-top: 3.5rem;
+        align-items: flex-end;
+        justify-content: flex-start;
+        padding: 0 3rem 3rem;
     }
     .hero-inner {
         max-width: 820px;
@@ -126,7 +126,7 @@
         color: #cbd5e1;
     }
     @media (max-width: 768px) {
-        .hero-content { padding: 2rem 1.25rem; }
+        .hero-content { padding: 1.5rem 1.25rem 2.5rem; align-items: flex-end; justify-content: flex-start; }
         .hero-slide { min-height: 520px; }
     }
 
@@ -155,6 +155,11 @@
     .feature-title { font-weight: 700; color: #0f172a; }
     .feature-card small { color: #6b7280; }
 
+    .feature-bg-blue { background: #e0f2fe; }
+    .feature-bg-yellow { background: #fef3c7; }
+    .feature-bg-red { background: #fee2e2; }
+    .feature-bg-indigo { background: #e0e7ff; }
+
     .section-title { font-weight: 800; color: #0f172a; }
     .section-subtitle { color: #6b7280; margin: 0; }
 
@@ -162,7 +167,7 @@
         border: 1px solid #e5e7eb;
         background: #ffffff;
         border-radius: 16px;
-        overflow: hidden;
+        overflow: visible;
         box-shadow: 0 14px 34px rgba(0,0,0,0.1);
     }
     .product-img, .course-thumb { position: relative; overflow: hidden; }
@@ -241,8 +246,9 @@
                         'subtitle' => 'Aprende con los mejores profesionales del rubro',
                     ],
                 ] as $index => $slide)
+                    @php $slideImage = $slide['image'] ?? ''; @endphp
                     <div class="carousel-item @if ($index === 0) active @endif" data-bs-interval="3000">
-                        <div class="hero-slide rounded-4 shadow-lg" style="background-image: url('{{ $slide['image'] }}');">
+                        <div class="hero-slide rounded-4 shadow-lg" style="background-image: url('{{ $slideImage }}');">
                             <div class="hero-overlay rounded-4"></div>
                             <div class="hero-content text-white">
                                 <div class="hero-inner">
@@ -280,13 +286,13 @@
             {{-- Highlights --}}
             <div class="row g-3 mb-5">
                 @foreach ([
-                    ['icon' => 'bi-send', 'title' => 'Envio rapido', 'text' => 'Entrega en 24-48 horas', 'color' => '#e0f2fe'],
-                    ['icon' => 'bi-patch-check-fill', 'title' => 'Calidad garantizada', 'text' => 'Productos certificados', 'color' => '#fef3c7'],
-                    ['icon' => 'bi-headset', 'title' => 'Atencion experta', 'text' => 'Soporte especializado', 'color' => '#fee2e2'],
-                    ['icon' => 'bi-shield-lock', 'title' => 'Compra segura', 'text' => 'Pagos protegidos', 'color' => '#e0e7ff'],
+                    ['icon' => 'bi-send', 'title' => 'Envio rapido', 'text' => 'Entrega en 24-48 horas', 'bg' => 'feature-bg-blue'],
+                    ['icon' => 'bi-patch-check-fill', 'title' => 'Calidad garantizada', 'text' => 'Productos certificados', 'bg' => 'feature-bg-yellow'],
+                    ['icon' => 'bi-headset', 'title' => 'Atencion experta', 'text' => 'Soporte especializado', 'bg' => 'feature-bg-red'],
+                    ['icon' => 'bi-shield-lock', 'title' => 'Compra segura', 'text' => 'Pagos protegidos', 'bg' => 'feature-bg-indigo'],
                 ] as $feature)
                     <div class="col-12 col-md-3">
-                        <div class="feature-card" style="background: {{ $feature['color'] }};">
+                        <div class="feature-card {{ $feature['bg'] ?? '' }}">
                             <div class="feature-icon"><i class="bi {{ $feature['icon'] }}"></i></div>
                             <div>
                                 <p class="feature-title mb-1">{{ $feature['title'] }}</p>
@@ -386,6 +392,7 @@
                                                 'course' => $course,
                                                 'buttonClass' => 'btn btn-primary btn-sm',
                                                 'buttonLabel' => 'Adquirir video',
+                                                'modalId' => 'home-course-' . $course->id,
                                             ])
                                         @else
                                             <a href="{{ route('login') }}" class="btn btn-primary btn-sm" style="background-color:#1e40af;">Inicia sesion</a>
