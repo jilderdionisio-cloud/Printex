@@ -4,8 +4,8 @@
     bottom: 20px;
     right: 20px;
     z-index: 1100;
-    width: 56px;
-    height: 56px;
+    width: 72px;
+    height: 72px;
     border-radius: 50%;
     border: none;
     display: inline-flex;
@@ -14,7 +14,7 @@
     background: linear-gradient(135deg, #0033A0, #0a1f52);
     box-shadow: 0 14px 30px rgba(0,0,0,0.2);
     color: #FFD700;
-    font-size: 26px;
+    font-size: 32px;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -24,7 +24,7 @@
 }
 .printbot-window {
     position: fixed;
-    bottom: 86px;
+    bottom: 102px;
     right: 20px;
     width: 320px;
     max-width: 90vw;

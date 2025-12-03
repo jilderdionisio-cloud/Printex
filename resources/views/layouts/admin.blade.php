@@ -87,6 +87,7 @@
                         ['label' => 'Pedidos', 'route' => 'admin.orders.index', 'icon' => 'bi-bag-check'],
                         ['label' => 'Cursos', 'route' => 'admin.courses.index', 'icon' => 'bi-journal-text'],
                         ['label' => 'Inscripciones', 'route' => 'admin.enrollments.index', 'icon' => 'bi-person-lines-fill'],
+                        ['label' => 'Solicitudes de asesoría', 'route' => 'admin.support-requests.index', 'icon' => 'bi-chat-dots'],
                     ];
                 @endphp
                 <h6 class="text-uppercase text-muted small mb-3">Menú principal</h6>

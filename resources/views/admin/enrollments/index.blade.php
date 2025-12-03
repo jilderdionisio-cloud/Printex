@@ -8,15 +8,15 @@
             <h1 class="fw-bold mb-1">Inscripciones</h1>
             <p class="text-muted mb-0">Seguimiento de alumnos registrados en cursos.</p>
         </div>
-        <div class="d-flex gap-2">
+        <form method="GET" class="d-flex gap-2">
             <select class="form-select form-select-sm" name="status">
                 <option value="">Todos los estados</option>
-                @foreach (['Activo', 'Pendiente', 'Completado', 'Cancelado'] as $status)
+                @foreach (($allowedStatuses ?? ['Activo', 'Pendiente', 'Completado', 'Cancelado']) as $status)
                     <option value="{{ $status }}" @selected(request('status') === $status)>{{ $status }}</option>
                 @endforeach
             </select>
-            <button class="btn btn-outline-secondary btn-sm">Filtrar</button>
-        </div>
+            <button class="btn btn-outline-secondary btn-sm" type="submit">Filtrar</button>
+        </form>
     </div>
 
     <div class="card border-0 shadow-sm">

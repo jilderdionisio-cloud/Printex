@@ -74,26 +74,35 @@
                     {{-- Modal de video simulado --}}
                     <div class="modal fade" id="videoModal-{{ $enrollment->id }}" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Video: {{ $enrollment->course->name ?? 'Curso' }}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <div class="modal-content border-0 shadow-lg">
+                                <div class="modal-header border-0 pb-0">
+                                    <div>
+                                        <p class="text-muted small mb-1">Vista previa</p>
+                                        <h5 class="modal-title fw-bold mb-0">Video: {{ $enrollment->course->name ?? 'Curso' }}</h5>
+                                    </div>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                                 </div>
-                                <div class="modal-body">
-                                    <div class="ratio ratio-16x9 rounded-3 position-relative overflow-hidden" style="background: radial-gradient(circle at 30% 30%, #1e3a8a, #0f172a);">
-                                        <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(30,64,175,0.15));"></div>
+                                <div class="modal-body pt-3">
+                                    <div class="ratio ratio-16x9 rounded-4 position-relative overflow-hidden"
+                                         style="background: radial-gradient(circle at 25% 25%, #1e40af, #0b1430); box-shadow:0 12px 34px rgba(0,0,0,0.3);">
+                                        <div class="position-absolute top-0 start-0 w-100 h-100"
+                                             style="background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(30,64,175,0.22));"></div>
                                         <div class="d-flex align-items-center justify-content-center h-100 text-white position-relative">
-                                            <div class="text-center">
-                                                <button type="button" class="btn btn-light btn-lg rounded-circle mb-3" style="width:72px; height:72px; box-shadow:0 12px 32px rgba(0,0,0,0.25);">
+                                            <div class="text-center px-4">
+                                                <button type="button"
+                                                        class="btn btn-light btn-lg rounded-circle mb-3"
+                                                        style="width:80px; height:80px; box-shadow:0 18px 36px rgba(0,0,0,0.38);">
                                                     <span class="fs-3">&#9658;</span>
                                                 </button>
-                                                <p class="mb-1 fw-semibold">Video en pausa</p>
-                                                <p class="text-white-50 mb-0 small">El contenido se mostrará aquí cuando se suba el video.</p>
+                                                <p class="mb-0 fw-semibold">Presiona para ver el video</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="modal-footer">
+                                <div class="modal-footer border-0">
+                                    <div class="text-start me-auto">
+                                        <p class="small mb-0 text-muted">Asegúrate de tener buena conexión para verlo en HD.</p>
+                                    </div>
                                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
                                 </div>
                             </div>
