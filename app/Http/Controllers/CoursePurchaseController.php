@@ -26,8 +26,8 @@ class CoursePurchaseController extends Controller
             [
                 'student_name' => $user->name ?? null,
                 'student_email' => $user->email ?? null,
-                'student_phone' => $user->phone ?? null,
-                'student_address' => $user->address ?? null,
+                'student_phone' => $user->phone ?? '',
+                'student_address' => $user->address ?? '',
                 'status' => 'Activo',
             ]
         );
