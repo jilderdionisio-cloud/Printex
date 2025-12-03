@@ -96,6 +96,7 @@
                                 <a href="{{ route('products.show', $product->id) }}" class="btn btn-sm btn-outline-secondary flex-fill">
                                     Ver detalle
                                 </a>
+                                @auth
                                     <form method="POST" action="{{ route('cart.add') }}" class="flex-fill">
                                         @csrf
                                         <input type="hidden" name="type" value="product">
@@ -103,7 +104,12 @@
                                         <button type="submit" class="btn btn-sm btn-primary w-100" style="background-color:#1e40af;">
                                             Añadir al carrito
                                         </button>
-                                </form>
+                                    </form>
+                                @else
+                                    <a href="{{ route('login') }}" class="btn btn-sm btn-primary flex-fill" style="background-color:#1e40af;">
+                                        Inicia sesión
+                                    </a>
+                                @endauth
                             </div>
                         </div>
                     </div>

@@ -1,4 +1,4 @@
-﻿@extends('layouts.guest')
+@extends('layouts.guest')
 
 @section('title', 'Inicio | Printex')
 
@@ -25,19 +25,21 @@
     .hero-overlay {
         position: absolute;
         inset: 0;
-        background: linear-gradient(120deg, rgba(16, 43, 123, 0.9), rgba(10, 31, 82, 0.78));
+        background: linear-gradient(115deg, rgba(15, 23, 42, 0.78), rgba(30, 64, 175, 0.92));
     }
     .hero-content {
         position: absolute;
         inset: 0;
         display: flex;
-        align-items: flex-start;
-        justify-content: center;
-        padding-top: 3.5rem;
+        align-items: flex-end;
+        justify-content: flex-start;
+        padding: 0 3rem 3rem;
     }
     .hero-inner {
-        max-width: 760px;
+        max-width: 820px;
         text-align: left;
+        position: relative;
+        z-index: 2;
     }
     .hero-title {
         font-size: clamp(2.4rem, 3vw + 1rem, 3.8rem);
@@ -106,11 +108,13 @@
         width: 100vw;
         margin-left: -50vw;
         margin-right: -50vw;
-        background: #0b1224;
+        background: #0f2b7b;
         color: #e2e8f0;
         padding: 2.5rem 1.25rem;
         text-align: center;
         margin-top: 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
     .hero-bottom-band h2 {
         font-size: clamp(1.6rem, 2vw + 1rem, 2.2rem);
@@ -122,7 +126,7 @@
         color: #cbd5e1;
     }
     @media (max-width: 768px) {
-        .hero-content { padding: 2rem 1.25rem; }
+        .hero-content { padding: 1.5rem 1.25rem 2.5rem; align-items: flex-end; justify-content: flex-start; }
         .hero-slide { min-height: 520px; }
     }
 
@@ -132,36 +136,47 @@
         gap: 0.9rem;
         align-items: center;
         padding: 1rem 1.1rem;
-        border-radius: 12px;
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
-        border: 1px solid rgba(0, 0, 0, 0.04);
+        border-radius: 14px;
+        border: 1px solid #e5e7eb;
+        background: #ffffff;
+        box-shadow: 0 12px 28px rgba(0,0,0,0.08);
     }
     .feature-icon {
-        width: 44px;
-        height: 44px;
-        border-radius: 12px;
-        background: #fff;
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        background: #f3f4f6;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        color: #0f172a;
+        color: #1e40af;
         box-shadow: 0 6px 16px rgba(0,0,0,0.08);
     }
-    .feature-title { font-weight: 700; }
+    .feature-title { font-weight: 700; color: #0f172a; }
+    .feature-card small { color: #6b7280; }
 
-    .section-title { font-weight: 800; }
+    .feature-bg-blue { background: #e0f2fe; }
+    .feature-bg-yellow { background: #fef3c7; }
+    .feature-bg-red { background: #fee2e2; }
+    .feature-bg-indigo { background: #e0e7ff; }
+
+    .section-title { font-weight: 800; color: #0f172a; }
     .section-subtitle { color: #6b7280; margin: 0; }
 
     .product-card, .course-card {
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        background: #fff;
-        border-radius: 14px;
-        overflow: hidden;
-        box-shadow: 0 14px 34px rgba(0,0,0,0.06);
+        border: 1px solid #e5e7eb;
+        background: #ffffff;
+        border-radius: 16px;
+        overflow: visible;
+        box-shadow: 0 14px 34px rgba(0,0,0,0.1);
     }
     .product-img, .course-thumb { position: relative; overflow: hidden; }
     .product-body, .course-body { padding: 1rem 1.1rem 1.2rem; }
-    .price { font-size: 1.1rem; }
+    .price { font-size: 1.1rem; color: #f59e0b !important; }
+    .product-card h5,
+    .course-card h5 { color: #0f172a; }
+    .product-card .text-muted,
+    .course-card .text-muted { color: #6b7280 !important; }
 
     .pill-chip {
         background: #ffffff;
@@ -174,10 +189,12 @@
     }
 
     .benefits-card {
-        background: #fff;
-        border-radius: 14px;
+        background: #ffffff;
+        border-radius: 16px;
         padding: 1.4rem;
+        border: 1px solid #e5e7eb;
         box-shadow: 0 14px 34px rgba(0,0,0,0.08);
+        color: #0f172a;
     }
     .bullet {
         width: 32px;
@@ -191,11 +208,11 @@
         font-weight: 800;
     }
     .testimonial-card {
-        background: #fff;
+        background: #ffffff;
         border-radius: 12px;
         padding: 1.1rem 1.25rem;
-        border: 1px solid rgba(0, 0, 0, 0.04);
-        box-shadow: 0 10px 24px rgba(0,0,0,0.05);
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 10px 24px rgba(0,0,0,0.08);
     }
 </style>
 @endpush
@@ -229,8 +246,9 @@
                         'subtitle' => 'Aprende con los mejores profesionales del rubro',
                     ],
                 ] as $index => $slide)
+                    @php $slideImage = $slide['image'] ?? ''; @endphp
                     <div class="carousel-item @if ($index === 0) active @endif" data-bs-interval="3000">
-                        <div class="hero-slide rounded-4 shadow-lg" style="background-image: url('{{ $slide['image'] }}');">
+                        <div class="hero-slide rounded-4 shadow-lg" style="background-image: url('{{ $slideImage }}');">
                             <div class="hero-overlay rounded-4"></div>
                             <div class="hero-content text-white">
                                 <div class="hero-inner">
@@ -263,18 +281,18 @@
     </div>
 
     {{-- Highlights / Productos / Cursos / Beneficios --}}
-    <section class="py-5" style="background:#f1f5f9;">
+    <section class="py-5" style="background:#f3f4f6; border-top:1px solid #e5e7eb;">
         <div class="container">
             {{-- Highlights --}}
             <div class="row g-3 mb-5">
                 @foreach ([
-                    ['icon' => 'bi-send', 'title' => 'Envio rapido', 'text' => 'Entrega en 24-48 horas', 'color' => '#e0f2fe'],
-                    ['icon' => 'bi-patch-check-fill', 'title' => 'Calidad garantizada', 'text' => 'Productos certificados', 'color' => '#fef3c7'],
-                    ['icon' => 'bi-headset', 'title' => 'Atencion experta', 'text' => 'Soporte especializado', 'color' => '#fee2e2'],
-                    ['icon' => 'bi-shield-lock', 'title' => 'Compra segura', 'text' => 'Pagos protegidos', 'color' => '#e0e7ff'],
+                    ['icon' => 'bi-send', 'title' => 'Envio rapido', 'text' => 'Entrega en 24-48 horas', 'bg' => 'feature-bg-blue'],
+                    ['icon' => 'bi-patch-check-fill', 'title' => 'Calidad garantizada', 'text' => 'Productos certificados', 'bg' => 'feature-bg-yellow'],
+                    ['icon' => 'bi-headset', 'title' => 'Atencion experta', 'text' => 'Soporte especializado', 'bg' => 'feature-bg-red'],
+                    ['icon' => 'bi-shield-lock', 'title' => 'Compra segura', 'text' => 'Pagos protegidos', 'bg' => 'feature-bg-indigo'],
                 ] as $feature)
                     <div class="col-12 col-md-3">
-                        <div class="feature-card" style="background: {{ $feature['color'] }};">
+                        <div class="feature-card {{ $feature['bg'] ?? '' }}">
                             <div class="feature-icon"><i class="bi {{ $feature['icon'] }}"></i></div>
                             <div>
                                 <p class="feature-title mb-1">{{ $feature['title'] }}</p>
@@ -310,12 +328,16 @@
                                     <span class="price text-primary fw-bold">S/ {{ number_format($product->price, 2) }}</span>
                                     <div class="d-flex gap-2">
                                         <a href="{{ route('products.show', $product->id) }}" class="btn btn-outline-primary btn-sm">Ver</a>
-                                        <form method="POST" action="{{ route('cart.add') }}">
-                                            @csrf
-                                            <input type="hidden" name="type" value="product">
-                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                            <button class="btn btn-primary btn-sm">Agregar</button>
-                                        </form>
+                                        @auth
+                                            <form method="POST" action="{{ route('cart.add') }}">
+                                                @csrf
+                                                <input type="hidden" name="type" value="product">
+                                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                <button class="btn btn-primary btn-sm">Agregar</button>
+                                            </form>
+                                        @else
+                                            <a href="{{ route('login') }}" class="btn btn-primary btn-sm">Inicia sesion</a>
+                                        @endauth
                                     </div>
                                 </div>
                             </div>
@@ -337,24 +359,24 @@
                 <p class="section-subtitle">Aprende de los expertos y lleva tu negocio al siguiente nivel.</p>
             </div>
             <div class="row g-4 mb-3">
-                        @forelse ($courses as $course)
-                            <div class="col-12 col-lg-4">
-                                <div class="course-card h-100">
-                                    <div class="ratio ratio-16x9 rounded-top course-thumb bg-light">
-                                        @php
-                                            $imagePath = $course->image ?? null;
-                                        @endphp
-                                        @if (!empty($imagePath))
-                                            @if (\Illuminate\Support\Str::startsWith($imagePath, ['http://', 'https://']))
-                                                <img src="{{ $imagePath }}" alt="{{ $course->name }}" class="object-fit-cover rounded-top" style="width: 100%; height: 100%; object-fit: cover;">
-                                            @else
-                                                <img src="{{ asset('storage/' . $imagePath) }}" alt="{{ $course->name }}" class="object-fit-cover rounded-top" style="width: 100%; height: 100%; object-fit: cover;">
-                                            @endif
-                                        @else
-                                            <div class="d-flex align-items-center justify-content-center text-muted">Imagen curso</div>
-                                        @endif
-                                    </div>
-                                    <div class="course-body">
+                @forelse ($courses as $course)
+                    <div class="col-12 col-lg-4">
+                        <div class="course-card h-100">
+                            <div class="ratio ratio-16x9 rounded-top course-thumb bg-light">
+                                @php
+                                    $imagePath = $course->image ?? null;
+                                @endphp
+                                @if (!empty($imagePath))
+                                    @if (\Illuminate\Support\Str::startsWith($imagePath, ['http://', 'https://']))
+                                        <img src="{{ $imagePath }}" alt="{{ $course->name }}" class="object-fit-cover rounded-top" style="width: 100%; height: 100%; object-fit: cover;">
+                                    @else
+                                        <img src="{{ asset('storage/' . $imagePath) }}" alt="{{ $course->name }}" class="object-fit-cover rounded-top" style="width: 100%; height: 100%; object-fit: cover;">
+                                    @endif
+                                @else
+                                    <div class="d-flex align-items-center justify-content-center text-muted">Imagen curso</div>
+                                @endif
+                            </div>
+                            <div class="course-body">
                                 <div class="d-flex align-items-center gap-2 mb-2">
                                     <span class="badge bg-warning text-dark">{{ $course->modality ?? 'Online' }}</span>
                                     <small class="text-muted">{{ ($course->duration_hours ?? 'N/D') . ' h' }}</small>
@@ -364,15 +386,16 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="price text-primary fw-bold">S/ {{ number_format($course->price, 2) }}</span>
                                     <div class="d-flex gap-2">
-                                        <a href="{{ route('courses.show', $course->id) }}" class="btn btn-outline-primary btn-sm">Ver más</a>
+                                        <a href="{{ route('courses.show', $course->id) }}" class="btn btn-outline-primary btn-sm">Ver mas</a>
                                         @auth
                                             @include('courses.partials.purchase-modal', [
                                                 'course' => $course,
                                                 'buttonClass' => 'btn btn-primary btn-sm',
                                                 'buttonLabel' => 'Adquirir video',
+                                                'modalId' => 'home-course-' . $course->id,
                                             ])
                                         @else
-                                            <a href="{{ route('login') }}" class="btn btn-primary btn-sm" style="background-color:#1e40af;">Inicia sesi�n</a>
+                                            <a href="{{ route('login') }}" class="btn btn-primary btn-sm" style="background-color:#1e40af;">Inicia sesion</a>
                                         @endauth
                                     </div>
                                 </div>
@@ -392,5 +415,3 @@
         </div>
     </section>
 @endsection
-
-

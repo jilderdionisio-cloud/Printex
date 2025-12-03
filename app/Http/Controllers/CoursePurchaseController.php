@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use App\Models\CourseEnrollment;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -16,6 +17,10 @@ class CoursePurchaseController extends Controller
         $request->validate([
             'payment_method' => ['required', 'string', 'max:50'],
             'payment_reference' => ['nullable', 'string', 'max:255'],
+            'payment_reference_transfer' => ['nullable', 'string', 'max:255'],
+            'card_number' => ['nullable', 'string', 'max:32'],
+            'card_exp' => ['nullable', 'string', 'max:8'],
+            'card_cvv' => ['nullable', 'string', 'max:8'],
         ]);
 
         CourseEnrollment::updateOrCreate(

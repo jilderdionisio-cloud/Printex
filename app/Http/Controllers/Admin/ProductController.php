@@ -40,6 +40,7 @@ class ProductController extends Controller
 
         return view('admin.products.index', compact('products', 'categories'));
     }
+
     //Mostrar formulario para crear un producto
     public function create(): View
     {
@@ -49,11 +50,14 @@ class ProductController extends Controller
 
         return view('admin.products.create', compact('categories', 'suppliers'));
     }
+
     //Guardar un producto nuevo
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'category_id' => ['required', 'exists:categories,id'],
+            'category_id' => ['required'],
+            'category_name_new' => ['nullable', 'string', 'max:255'],
+            'category_description_new' => ['nullable', 'string', 'max:255'],
             'supplier_id' => ['required', 'exists:suppliers,id'],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -62,15 +66,36 @@ class ProductController extends Controller
             'image' => ['nullable', 'image', 'max:2048'],
         ]);
 
+        // Validar la categoría o crear una nueva
+        if ($data['category_id'] === 'new') {
+            $request->validate([
+                'category_name_new' => ['required', 'string', 'max:255'],
+                'category_description_new' => ['nullable', 'string', 'max:255'],
+            ]);
+
+            $category = Category::create([
+                'name' => $data['category_name_new'],
+                'description' => $data['category_description_new'] ?? null,
+            ]);
+            $data['category_id'] = $category->id;
+        } elseif (! Category::whereKey($data['category_id'])->exists()) {
+            return back()
+                ->withErrors(['category_id' => 'La categoría seleccionada no existe.'])
+                ->withInput();
+        }
+
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('products', 'public');
         }
+
+        unset($data['category_name_new'], $data['category_description_new']);
 
         $product = Product::create($data);
         \App\Support\AuditLogger::log('created', $product);
 
         return redirect()->route('admin.products.index')->with('status', 'Producto creado correctamente.');
     }
+
     //Mostrar formulario para editar un producto
     public function edit(int $id): View
     {
@@ -81,6 +106,7 @@ class ProductController extends Controller
 
         return view('admin.products.edit', compact('product', 'categories', 'suppliers'));
     }
+
     //Guardar cambios de un producto
     public function update(Request $request, int $id): RedirectResponse
     {
@@ -108,6 +134,7 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products.index')->with('status', 'Producto actualizado correctamente.');
     }
+
    //Borrar un producto
     public function destroy(int $id): RedirectResponse
     {

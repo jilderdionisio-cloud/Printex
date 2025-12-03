@@ -42,7 +42,7 @@
                                 <td>{{ $enrollment->course->name ?? 'Curso' }}</td>
                                 <td>{{ $enrollment->created_at?->format('d/m/Y') }}</td>
                                 <td>
-                                    <span class="badge @class([
+                                    <span class="badge text-dark @class([
                                         'text-bg-success' => $enrollment->status === 'Activo',
                                         'text-bg-warning' => $enrollment->status === 'Pendiente',
                                         'text-bg-secondary' => $enrollment->status === 'Completado',

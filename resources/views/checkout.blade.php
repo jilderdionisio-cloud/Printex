@@ -99,8 +99,8 @@
 
                     <div class="accordion" id="paymentAccordion">
                         @foreach ([
-                            ['key' => 'Yape', 'label' => 'Yape', 'description' => 'Escanea el código Yape y coloca la referencia.'],
-                            ['key' => 'Plin', 'label' => 'Plin', 'description' => 'Escanea el código Plin y completa la referencia.'],
+                            ['key' => 'Yape', 'label' => 'Yape', 'description' => 'Paga con tu número de Yape.'],
+                            ['key' => 'Plin', 'label' => 'Plin', 'description' => 'Paga con tu número de Plin.'],
                             ['key' => 'Visa', 'label' => 'Visa', 'description' => 'Completa los datos de tu tarjeta Visa.'],
                             ['key' => 'Mastercard', 'label' => 'Mastercard', 'description' => 'Completa los datos de tu tarjeta Mastercard.'],
                             ['key' => 'Efectivo', 'label' => 'Pago en efectivo', 'description' => 'Paga en tienda o contra entrega en 48 horas.'],
@@ -114,6 +114,7 @@
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="payment_method"
                                                    value="{{ $method['key'] }}" id="radio{{ $method['key'] }}"
+                                                   data-payment-radio
                                                    {{ old('payment_method', $index === 0 ? $method['key'] : null) === $method['key'] ? 'checked' : '' }}>
                                             <label class="form-check-label ms-2" for="radio{{ $method['key'] }}">
                                                 {{ $method['label'] }}
@@ -136,6 +137,13 @@
                         <div class="text-danger small mt-2">{{ $message }}</div>
                     @enderror
 
+                    <div class="mt-3" id="paymentExtra">
+                        <label class="form-label" id="paymentExtraLabel">Referencia del pago</label>
+                        <input type="text" name="payment_reference" id="paymentExtraInput"
+                               class="form-control"
+                               placeholder="Completa según el método seleccionado">
+                    </div>
+
                     <button type="submit" class="btn btn-primary w-100 btn-lg mt-4" style="background-color:#1e40af;">
                         Confirmar pedido
                     </button>
@@ -147,3 +155,39 @@
         </div>
     </form>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const radios = document.querySelectorAll('[data-payment-radio]');
+    const label = document.getElementById('paymentExtraLabel');
+    const input = document.getElementById('paymentExtraInput');
+
+    function updateField(method) {
+        input.required = false;
+        input.value = '';
+        if (method === 'Yape' || method === 'Plin') {
+            label.textContent = `Número de ${method}`;
+            input.placeholder = 'Número de celular asociado';
+            input.required = true;
+        } else if (method === 'Visa' || method === 'Mastercard') {
+            label.textContent = 'Número de tarjeta';
+            input.placeholder = '**** **** **** 1234';
+            input.required = true;
+        } else {
+            label.textContent = 'Referencia del pago';
+            input.placeholder = 'Referencia o código (opcional)';
+        }
+    }
+
+    radios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            updateField(e.target.value);
+        });
+        if (radio.checked) {
+            updateField(radio.value);
+        }
+    });
+});
+</script>
+@endpush

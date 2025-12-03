@@ -8,15 +8,15 @@
             <h1 class="fw-bold mb-1">Pedidos</h1>
             <p class="text-muted mb-0">Controla el estado de cada compra.</p>
         </div>
-        <div class="d-flex gap-2">
+        <form method="GET" class="d-flex gap-2">
             <select class="form-select form-select-sm" name="status">
                 <option value="">Todos los estados</option>
-                @foreach (['Pendiente','Procesando','Enviado','Entregado','Cancelado'] as $status)
+                @foreach (($statuses ?? ['Pendiente','Procesando','Enviado','Entregado','Cancelado','Pagado']) as $status)
                     <option value="{{ $status }}" @selected(request('status') === $status)>{{ $status }}</option>
                 @endforeach
             </select>
-            <button class="btn btn-outline-secondary btn-sm">Filtrar</button>
-        </div>
+            <button class="btn btn-outline-secondary btn-sm" type="submit">Filtrar</button>
+        </form>
     </div>
 
     <div class="card border-0 shadow-sm">
@@ -43,7 +43,7 @@
                                 <td>{{ ucfirst($order->payment_method) }}</td>
                                 <td>S/ {{ number_format($order->total, 2) }}</td>
                                 <td>
-                                    <span class="badge @class([
+                                    <span class="badge text-dark @class([
                                         'text-bg-warning' => $order->status === 'Pendiente',
                                         'text-bg-primary' => $order->status === 'Procesando',
                                         'text-bg-info' => $order->status === 'Enviado',

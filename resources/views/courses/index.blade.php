@@ -60,7 +60,7 @@
                         </p>
                         <div class="mt-3 d-flex flex-column gap-2">
                             @if ($inscrito)
-                                <button class="btn btn-success w-100" disabled>Inscrito</button>
+                                <button class="btn btn-primary w-100" style="background-color:#1e40af; border-color:#1e40af;" disabled>Inscrito</button>
                             @else
                                 <a href="{{ route('courses.show', $course->id) }}" class="btn btn-primary"
                                    style="background-color:#1e40af;">Ver detalles</a>

@@ -22,6 +22,14 @@ class CourseController extends Controller
     {
         $course = Course::findOrFail($id);
 
-        return view('courses.show', compact('course'));
+        $isEnrolled = false;
+        if (auth()->check()) {
+            $isEnrolled = auth()->user()
+                ->courseEnrollments()
+                ->where('course_id', $course->id)
+                ->exists();
+        }
+
+        return view('courses.show', compact('course', 'isEnrolled'));
     }
 }

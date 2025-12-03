@@ -19,6 +19,7 @@ use App\Http\Controllers\CoursePurchaseController;
 use App\Http\Controllers\CourseEnrollmentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductReviewController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupportRequestController;
 use App\Http\Controllers\User\MyCoursesController;
@@ -38,10 +39,12 @@ Route::get('/courses/{id}', [CourseController::class, 'show'])->name('courses.sh
 
 // CARRITO (sesi?n)
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
-Route::put('/cart/{itemKey}', [CartController::class, 'update'])->name('cart.update');
-Route::delete('/cart/{itemKey}', [CartController::class, 'remove'])->name('cart.remove');
-Route::delete('/cart-clear', [CartController::class, 'clear'])->name('cart.clear');
+Route::middleware('auth')->group(function () {
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::put('/cart/{itemKey}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/{itemKey}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::delete('/cart-clear', [CartController::class, 'clear'])->name('cart.clear');
+});
 
 // AUTENTICACI?N (guest)
 Route::middleware('guest')->group(function () {
@@ -59,6 +62,9 @@ Route::middleware('auth')->group(function () {
     // Inscripci?n a cursos (cliente)
     Route::post('/courses/{course}/enroll', [CourseEnrollmentController::class, 'store'])->name('courses.enroll');
     Route::post('/courses/{course}/purchase', [CoursePurchaseController::class, 'store'])->name('courses.purchase');
+
+    // Reseñas de productos
+    Route::post('/products/{product}/reviews', [ProductReviewController::class, 'store'])->name('products.reviews.store');
 
     // Checkout
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');

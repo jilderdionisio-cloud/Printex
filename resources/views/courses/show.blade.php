@@ -1,8 +1,11 @@
-ÃÂ¯ÃÂ»ÃÂ¿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('title', ($course->name ?? 'Curso') . ' | Printex')
 
 @section('content')
+    @php
+        $isEnrolled = $isEnrolled ?? false;
+    @endphp
     <div class="row g-4">
         <div class="col-12 col-lg-7">
             <div class="bg-white rounded-4 shadow-sm p-4 h-100">
@@ -30,29 +33,31 @@
                     S/ {{ number_format($course->price, 2) }}
                 </p>
                 <p class="text-muted">
-                    {!! nl2br(e($course->description ?? 'Pronto agregaremos una descripciÃÆÃÂ³n detallada para este curso.')) !!}
+                    {!! nl2br(e($course->description ?? 'Pronto agregaremos una descripción detallada para este curso.')) !!}
                 </p>
 
-                <div class="row g-3 my-4">
-                    <div class="col-12 col-md-6">
+                <div class="row g-3 my-4 justify-content-center">
+                    <div class="col-12 col-md-4">
                         <div class="p-3 border rounded-3">
-                            <p class="text-muted small mb-1 text-uppercase">DuraciÃÆÃÂ³n (horas)</p>
+                            <p class="text-muted small mb-1 text-uppercase">Duración (horas)</p>
                             <h5 class="mb-0">{{ $course->duration_hours ?? 'N/D' }}</h5>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6">
-                        <div class="p-3 border rounded-3">
-                            <p class="text-muted small mb-1 text-uppercase">Cupos disponibles</p>
-                            <h5 class="mb-0">{{ $course->slots ?? '20' }}</h5>
+                    @unless($isEnrolled)
+                        <div class="col-12 col-md-4">
+                            <div class="p-3 border rounded-3">
+                                <p class="text-muted small mb-1 text-uppercase">Cupos disponibles</p>
+                                <h5 class="mb-0">{{ $course->slots ?? '20' }}</h5>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-12 col-md-6">
+                    @endunless
+                    <div class="col-12 col-md-4">
                         <div class="p-3 border rounded-3">
                             <p class="text-muted small mb-1 text-uppercase">Instructor</p>
                             <h5 class="mb-0">{{ $course->instructor ?? 'Equipo Printex' }}</h5>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-4">
                         <div class="p-3 border rounded-3">
                             <p class="text-muted small mb-1 text-uppercase">Modalidad</p>
                             <h5 class="mb-0">{{ $course->modality ?? 'Presencial' }}</h5>
@@ -62,41 +67,51 @@
 
                 <div class="d-flex flex-column flex-md-row gap-3">
                     @auth
-                        @include('courses.partials.purchase-modal', [
-                            'course' => $course,
-                            'buttonClass' => 'btn btn-lg btn-primary w-100 flex-fill',
-                            'buttonLabel' => 'Adquirir video',
-                        ])
+                        @if ($isEnrolled)
+                            <a href="{{ route('courses.my') }}" class="btn btn-lg btn-primary w-100 flex-fill"
+                               style="background-color:#1e40af; border-color:#1e40af;">
+                                Ir a Mis cursos
+                            </a>
+                        @else
+                            @include('courses.partials.purchase-modal', [
+                                'course' => $course,
+                                'buttonClass' => 'btn btn-lg btn-primary w-100 flex-fill',
+                                'buttonLabel' => 'Adquirir video',
+                            ])
+                            <a href="{{ route('courses.index') }}" class="btn btn-lg btn-outline-secondary flex-fill">
+                                Volver al listado
+                            </a>
+                        @endif
                     @else
                         <a href="{{ route('login') }}" class="btn btn-lg btn-primary w-100 flex-fill" style="background-color:#1e40af;">
                             Inicia sesión para adquirir video
                         </a>
+                        <a href="{{ route('courses.index') }}" class="btn btn-lg btn-outline-secondary flex-fill">
+                            Volver al listado
+                        </a>
                     @endauth
-                    <a href="{{ route('courses.index') }}" class="btn btn-lg btn-outline-secondary flex-fill">
-                        Volver al listado
-                    </a>
                 </div>
             </div>
         </div>
 
-                <div class="col-12 col-lg-5">
+        <div class="col-12 col-lg-5">
             <div class="bg-white rounded-4 shadow-sm p-4">
-                <h4 class="fw-bold mb-3">Lo que aprender?s</h4>
+                <h4 class="fw-bold mb-3">Lo que aprenderás</h4>
                 <ul class="list-unstyled mb-4">
                     <li class="mb-3 d-flex">
-                        <span class="text-primary me-3">?</span>
-                        <span>Fundamentos del proceso de {{ strtolower($course->modality ?? 'sublimaci?n') }}.</span>
+                        <span class="text-primary me-3">&check;</span>
+                        <span>Fundamentos del proceso de {{ strtolower($course->modality ?? 'sublimación') }}.</span>
                     </li>
                     <li class="mb-3 d-flex">
-                        <span class="text-primary me-3">?</span>
+                        <span class="text-primary me-3">&check;</span>
                         <span>Manejo adecuado de equipos y consumibles.</span>
                     </li>
                     <li class="mb-3 d-flex">
-                        <span class="text-primary me-3">?</span>
-                        <span>Buenas pr?cticas para optimizar la producci?n.</span>
+                        <span class="text-primary me-3">&check;</span>
+                        <span>Buenas prácticas para optimizar la producción.</span>
                     </li>
                     <li class="d-flex">
-                        <span class="text-primary me-3">?</span>
+                        <span class="text-primary me-3">&check;</span>
                         <span>Tips comerciales para escalar tu negocio.</span>
                     </li>
                 </ul>
@@ -104,8 +119,8 @@
                 <div class="p-4 rounded-3 bg-light">
                     <h6 class="text-uppercase text-muted small mb-2">Incluye</h6>
                     <ul class="mb-0 text-muted small">
-                        <li>Materiales y gu?as digitales.</li>
-                        <li>Certificado de participaci?n.</li>
+                        <li>Materiales y guías digitales.</li>
+                        <li>Certificado de participación.</li>
                         <li>Acceso a PrintBot para consultas.</li>
                         <li>Grupo privado para soporte.</li>
                     </ul>
@@ -113,26 +128,18 @@
             </div>
 
             <div class="bg-white rounded-4 shadow-sm p-4 mt-3">
-                <h5 class="fw-bold mb-3">?Necesitas un asesor?</h5>
+                <h5 class="fw-bold mb-3">¿Necesitas un asesor?</h5>
+                <p class="text-muted mb-2">El servicio de asesoría está disponible solo para clientes que ya adquirieron el curso.</p>
                 @auth
-                    <form method="POST" action="{{ route('support-requests.store') }}">
-                        @csrf
-                        <input type="hidden" name="course_id" value="{{ $course->id }}">
-                        <div class="mb-3">
-                            <label class="form-label">Cu?ntanos tu duda</label>
-                            <textarea name="message" class="form-control" rows="3" required placeholder="No entiendo este tema / Tengo problemas con el acceso..."></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-outline-primary w-100" style="color:#1e40af; border-color:#1e40af;">
-                            Solicitar asesor
-                        </button>
-                    </form>
+                    <a href="{{ route('courses.my') }}" class="btn btn-outline-primary w-100" style="color:#1e40af; border-color:#1e40af;">
+                        Ir a "Mis cursos" para solicitar asesor
+                    </a>
                 @else
-                    <p class="text-muted mb-2">Inicia sesi?n para solicitar ayuda de un asesor.</p>
-                    <a href="{{ route('login') }}" class="btn btn-primary w-100" style="background-color:#1e40af;">Iniciar sesi?n</a>
+                    <a href="{{ route('login') }}" class="btn btn-primary w-100" style="background-color:#1e40af;">Iniciar sesión</a>
                 @endauth
             </div>
         </div>
     </div>
 
-    {{-- La inscripci?n se realizar? autom?ticamente al comprar el curso. --}}
+    {{-- La inscripción se realizará automáticamente al comprar el curso. --}}
 @endsection
