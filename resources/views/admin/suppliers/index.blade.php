@@ -22,7 +22,6 @@
                             <th>ID</th>
                             <th>Nombre</th>
                             <th>RUC</th>
-                            <th>Contacto</th>
                             <th>Email</th>
                             <th>Teléfono</th>
                             <th></th>
@@ -34,7 +33,6 @@
                                 <td>{{ $supplier->id }}</td>
                                 <td>{{ $supplier->name }}</td>
                                 <td>{{ $supplier->ruc }}</td>
-                                <td>{{ $supplier->contact }}</td>
                                 <td>{{ $supplier->email }}</td>
                                 <td>{{ $supplier->phone }}</td>
                                 <td class="text-end">
@@ -51,7 +49,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center text-muted py-4">No hay proveedores registrados.</td>
+                                <td colspan="6" class="text-center text-muted py-4">No hay proveedores registrados.</td>
                             </tr>
                         @endforelse
                     </tbody>

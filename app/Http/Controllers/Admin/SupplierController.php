@@ -19,20 +19,25 @@ class SupplierController extends Controller
 
     public function create(): View
     {
-        return view('admin.suppliers.create');
+        $supplies = ['Tintas', 'Maquinaria', 'Papeles', 'Vinilos', 'Serigrafía', 'Kits'];
+        return view('admin.suppliers.create', compact('supplies'));
     }
 
     public function store(Request $request): RedirectResponse
     {
+        $supplies = ['Tintas', 'Maquinaria', 'Papeles', 'Vinilos', 'Serigrafía', 'Kits'];
+
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'ruc' => ['nullable', 'string', 'max:20'],
-            'contact' => ['nullable', 'string', 'max:255'],
+            'ruc' => ['required', 'digits:11'],
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:50'],
             'address' => ['nullable', 'string', 'max:255'],
-            'products' => ['nullable', 'string'],
+            'products' => ['nullable', 'array'],
+            'products.*' => ['in:' . implode(',', $supplies)],
         ]);
+
+        $data['products'] = $request->filled('products') ? implode(', ', $request->input('products')) : null;
 
         Supplier::create($data);
 
@@ -42,23 +47,27 @@ class SupplierController extends Controller
     public function edit(int $id): View
     {
         $supplier = Supplier::findOrFail($id);
+        $supplies = ['Tintas', 'Maquinaria', 'Papeles', 'Vinilos', 'Serigrafía', 'Kits'];
 
-        return view('admin.suppliers.edit', compact('supplier'));
+        return view('admin.suppliers.edit', compact('supplier', 'supplies'));
     }
 
     public function update(Request $request, int $id): RedirectResponse
     {
         $supplier = Supplier::findOrFail($id);
+        $supplies = ['Tintas', 'Maquinaria', 'Papeles', 'Vinilos', 'Serigrafía', 'Kits'];
 
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'ruc' => ['nullable', 'string', 'max:20'],
-            'contact' => ['nullable', 'string', 'max:255'],
+            'ruc' => ['required', 'digits:11'],
             'email' => ['nullable', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:50'],
             'address' => ['nullable', 'string', 'max:255'],
-            'products' => ['nullable', 'string'],
+            'products' => ['nullable', 'array'],
+            'products.*' => ['in:' . implode(',', $supplies)],
         ]);
+
+        $data['products'] = $request->filled('products') ? implode(', ', $request->input('products')) : null;
 
         $supplier->update($data);
 
