@@ -23,6 +23,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupportRequestController;
 use App\Http\Controllers\User\MyCoursesController;
 use App\Http\Controllers\User\OrderController as UserOrderController;
+use App\Http\Controllers\ChatbotController;
 use Illuminate\Support\Facades\Route;
 
 // P?BLICO
@@ -32,6 +33,9 @@ Route::view('/contact', 'contact')->name('contact'); // aseg?rate de tener resou
 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+Route::post('/chat-productos', ChatbotController::class)
+    ->name('chat.products')
+    ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
 Route::get('/courses/{id}', [CourseController::class, 'show'])->name('courses.show');

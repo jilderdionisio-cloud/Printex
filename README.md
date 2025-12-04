@@ -57,3 +57,21 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Chatbot con Ollama (remoto)
+
+Para usar el chatbot con un modelo alojado en la nube (instancia de Ollama expuesta en otro servidor):
+
+1. Ajusta las variables en `.env`:
+   - `OLLAMA_HOST=https://ollama.midominio.com` (o la URL y puerto de tu instancia).
+   - `OLLAMA_MODEL=llama3.2:latest` (o el modelo cargado en ese host).
+   - `OLLAMA_API_KEY=` si tu instancia requiere token Bearer.
+   - `OLLAMA_VERIFY_SSL=true` (pon `false` solo si usas certificados internos de pruebas).
+2. Reinicia `php artisan serve` para que lea el nuevo `.env`.
+3. Asegura conectividad al puerto 11434 desde tu servidor Laravel.
+4. Prueba el endpoint:  
+   `curl -X POST http://localhost:8000/api/chatbot -H "Content-Type: application/json" -d "{\"message\":\"Recomiendame un producto\"}"`
+
+Si recibes "No pude conectar con el modelo IA", verifica:
+- Que la instancia remota de Ollama este corriendo y el puerto 11434 accesible (firewall/VPN).
+- Que `OLLAMA_HOST` apunte a ese host y `OLLAMA_TIMEOUT` no sea muy alto (15s por defecto).
