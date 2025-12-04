@@ -13,9 +13,17 @@ class OrderController extends Controller
     //Ver todos los pedidos
     public function index(): View
     {
-        $orders = Order::with('user')->latest()->paginate(20);
+        $statuses = ['Pendiente', 'Procesando', 'Enviado', 'Entregado', 'Cancelado', 'Pagado'];
 
-        return view('admin.orders.index', compact('orders'));
+        $orders = Order::with('user')
+            ->when(request('status') && in_array(request('status'), $statuses), function ($q) {
+                $q->where('status', request('status'));
+            })
+            ->latest()
+            ->paginate(20)
+            ->withQueryString();
+
+        return view('admin.orders.index', compact('orders', 'statuses'));
     }
     //Ver un pedido especÃ­fico
     public function show(int $id): View
@@ -30,7 +38,7 @@ class OrderController extends Controller
         $order = Order::findOrFail($id);
 
         $data = $request->validate([
-            'status' => ['required', 'in:Pendiente,Procesando,Enviado,Entregado,Cancelado'],
+            'status' => ['required', 'in:Pendiente,Procesando,Enviado,Entregado,Cancelado,Pagado'],
             'notes' => ['nullable', 'string'],
         ]);
 

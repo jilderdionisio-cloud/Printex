@@ -11,13 +11,25 @@ class CourseController extends Controller
     {
         $courses = Course::latest()->get();
 
-        return view('courses.index', compact('courses'));
+        $enrolledIds = auth()->check()
+            ? auth()->user()->courseEnrollments()->pluck('course_id')->toArray()
+            : [];
+
+        return view('courses.index', compact('courses', 'enrolledIds'));
     }
 
     public function show(int $id): View
     {
         $course = Course::findOrFail($id);
 
-        return view('courses.show', compact('course'));
+        $isEnrolled = false;
+        if (auth()->check()) {
+            $isEnrolled = auth()->user()
+                ->courseEnrollments()
+                ->where('course_id', $course->id)
+                ->exists();
+        }
+
+        return view('courses.show', compact('course', 'isEnrolled'));
     }
 }

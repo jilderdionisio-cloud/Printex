@@ -44,7 +44,7 @@
                                 <td>{{ $order->created_at?->format('d/m/Y H:i') }}</td>
                                 <td>{{ ucfirst($order->payment_method ?? 'N/D') }}</td>
                                 <td class="text-center">
-                                    <span class="badge
+                                    <span class="badge text-dark
                                         @class([
                                             'text-bg-warning' => $order->status === 'Pendiente',
                                             'text-bg-success' => $order->status === 'Entregado',

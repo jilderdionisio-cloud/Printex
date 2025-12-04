@@ -1,4 +1,4 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Cursos | Printex')
 
@@ -22,6 +22,9 @@
 
     <div class="row g-4">
         @forelse ($courses as $course)
+            @php
+                $inscrito = in_array($course->id, $enrolledIds ?? []);
+            @endphp
             <div class="col-12 col-md-6 col-xl-4">
                 <div class="card h-100 border-0 shadow-sm">
                     <div class="ratio ratio-16x9 rounded-top bg-light">
@@ -56,19 +59,23 @@
                             {{ Str::limit($course->description, 120) }}
                         </p>
                         <div class="mt-3 d-flex flex-column gap-2">
-                            <a href="{{ route('courses.show', $course->id) }}" class="btn btn-primary"
-                               style="background-color:#1e40af;">Ver detalles</a>
-                            @auth
-                                @include('courses.partials.purchase-modal', [
-                                    'course' => $course,
-                                    'buttonClass' => 'btn btn-outline-secondary w-100',
-                                    'buttonLabel' => 'Adquirir video',
-                                ])
+                            @if ($inscrito)
+                                <button class="btn btn-primary w-100" style="background-color:#1e40af; border-color:#1e40af;" disabled>Inscrito</button>
                             @else
-                                <a href="{{ route('login') }}" class="btn btn-outline-secondary w-100">
-                                    Inicia sesión para adquirir
-                                </a>
-                            @endauth
+                                <a href="{{ route('courses.show', $course->id) }}" class="btn btn-primary"
+                                   style="background-color:#1e40af;">Ver detalles</a>
+                                @auth
+                                    @include('courses.partials.purchase-modal', [
+                                        'course' => $course,
+                                        'buttonClass' => 'btn btn-outline-secondary w-100',
+                                        'buttonLabel' => 'Adquirir video',
+                                    ])
+                                @else
+                                    <a href="{{ route('login') }}" class="btn btn-outline-secondary w-100">
+                                        Inicia sesión para adquirir
+                                    </a>
+                                @endauth
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -86,4 +93,3 @@
         @endforelse
     </div>
 @endsection
-

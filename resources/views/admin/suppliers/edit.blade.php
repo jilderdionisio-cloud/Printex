@@ -33,11 +33,8 @@
                 </div>
                 <div class="col-12 col-lg-6">
                     <label class="form-label">RUC</label>
-                    <input type="text" name="ruc" class="form-control" value="{{ old('ruc', $supplier->ruc) }}" required>
-                </div>
-                <div class="col-12 col-lg-6">
-                    <label class="form-label">Contacto</label>
-                    <input type="text" name="contact" class="form-control" value="{{ old('contact', $supplier->contact) }}">
+                    <input type="text" name="ruc" class="form-control" value="{{ old('ruc', $supplier->ruc) }}" required
+                           pattern="\d{11}" maxlength="11" inputmode="numeric" placeholder="Solo 11 dígitos">
                 </div>
                 <div class="col-12 col-lg-6">
                     <label class="form-label">Email</label>
@@ -53,7 +50,25 @@
                 </div>
                 <div class="col-12">
                     <label class="form-label">Productos que suministra</label>
-                    <textarea name="products" rows="3" class="form-control">{{ old('products', $supplier->products) }}</textarea>
+                    @php
+                        $selectedProducts = collect(explode(',', old('products', $supplier->products ?? '')))
+                            ->map(fn($v) => trim($v))
+                            ->filter();
+                    @endphp
+                    <div class="row g-2">
+                        @foreach ($supplies as $item)
+                            <div class="col-6 col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="products[]"
+                                           value="{{ $item }}" id="sup-{{ \Illuminate\Support\Str::slug($item) }}"
+                                           @if ($selectedProducts->contains($item)) checked @endif>
+                                    <label class="form-check-label" for="sup-{{ \Illuminate\Support\Str::slug($item) }}">
+                                        {{ $item }}
+                                    </label>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
                 <div class="col-12 d-flex justify-content-end">
                     <button type="submit" class="btn btn-primary" style="background-color:#1e40af;">

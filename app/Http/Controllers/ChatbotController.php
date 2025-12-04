@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+<<<<<<< HEAD
 use App\Services\ChatbotService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -87,4 +88,30 @@ class ChatbotController extends Controller
 
         return false;
     }
+=======
+use Illuminate\Http\Request;
+use OpenAI;
+
+class ChatbotController extends Controller
+{
+    public function chat(Request $request)
+    {
+        $request->validate([
+            'message' => ['required', 'string'],
+        ]);
+
+        $client = OpenAI::client(env('OPENAI_API_KEY'));
+
+        $response = $client->chat()->create([
+            'model' => env('OPENAI_MODEL'),
+            'messages' => [
+                ['role' => 'user', 'content' => $request->input('message')],
+            ],
+        ]);
+
+        return response()->json([
+            'reply' => $response['choices'][0]['message']['content'] ?? '',
+        ]);
+    }
+>>>>>>> 9634b0642ea8e3b3632f9f3de8ebf6994b0a3778
 }
