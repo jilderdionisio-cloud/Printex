@@ -11,7 +11,6 @@ use App\Http\Controllers\Admin\SupportRequestController as AdminSupportRequestCo
 use App\Http\Controllers\Admin\TopItemsController;
 use App\Http\Controllers\Admin\UpcomingReleaseController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CourseController;
@@ -24,7 +23,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SupportRequestController;
 use App\Http\Controllers\User\MyCoursesController;
 use App\Http\Controllers\User\OrderController as UserOrderController;
-use App\Http\Controllers\ChatbotController;
 use Illuminate\Support\Facades\Route;
 
 // P?BLICO
@@ -34,10 +32,6 @@ Route::view('/contact', 'contact')->name('contact'); // aseg?rate de tener resou
 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
-Route::post('/chat-productos', ChatbotController::class)
-    ->name('chat.products')
-    ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
-
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index');
 Route::get('/courses/{id}', [CourseController::class, 'show'])->name('courses.show');
 
@@ -55,9 +49,6 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
     Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.store');
 });
-
-Route::view('/chat', 'chat')->name('chat');
-Route::post('/chatbot', [ChatbotController::class, 'chat']);
 
 // RUTAS PARA USUARIOS AUTENTICADOS
 Route::middleware('auth')->group(function () {

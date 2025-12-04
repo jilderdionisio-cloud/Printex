@@ -8,7 +8,6 @@ const PrintexStorage = {
         cart: 'printex_cart',
         orders: 'printex_orders',
         enrollments: 'printex_course_enrollments',
-        chatbot: 'printex_chatbot_history',
         activeUser: 'printex_active_user',
     },
 
@@ -66,7 +65,6 @@ const PrintexApp = {
         this.cart.updateBadge();
         this.forms.enableValidation();
         this.auth.bindToggle();
-        this.chatbot.bindToggle();
     },
 
     bootstrapData() {
@@ -101,9 +99,6 @@ const PrintexApp = {
         }
         if (!localStorage.getItem(PrintexStorage.keys.enrollments)) {
             PrintexStorage.set(PrintexStorage.keys.enrollments, []);
-        }
-        if (!localStorage.getItem(PrintexStorage.keys.chatbot)) {
-            PrintexStorage.set(PrintexStorage.keys.chatbot, []);
         }
     },
 
@@ -249,89 +244,6 @@ const PrintexApp = {
 
         byUser(userId) {
             return this.list().filter(enrollment => enrollment.userId === userId);
-        },
-    },
-
-    chatbot: {
-        responses: [
-            { keywords: ['horario', 'atención'], reply: 'Atendemos de lunes a sábado de 9:00 a 19:00 hrs.' },
-            { keywords: ['pago', 'yape', 'plin', 'visa', 'mastercard'], reply: 'Aceptamos Yape, Plin, Visa, Mastercard y efectivo.' },
-            { keywords: ['envío', 'delivery'], reply: 'Realizamos envíos a todo el país vía courier certificado.' },
-            { keywords: ['curso', 'inscripción'], reply: 'Tenemos cursos presenciales e híbridos. Puedes inscribirte desde la sección Cursos.' },
-            { keywords: ['producto', 'stock'], reply: 'Nuestro catálogo se actualiza diariamente, revisa la sección Productos.' },
-        ],
-
-        history() {
-            return PrintexStorage.get(PrintexStorage.keys.chatbot, []);
-        },
-
-        addMessage({ sender, text }) {
-            const history = this.history();
-            const message = {
-                id: crypto.randomUUID(),
-                sender,
-                text,
-                timestamp: new Date().toISOString(),
-            };
-            history.push(message);
-            PrintexStorage.set(PrintexStorage.keys.chatbot, history);
-            return message;
-        },
-
-        reply(message) {
-            const lower = message.toLowerCase();
-            const match = this.responses.find(response =>
-                response.keywords.some(keyword => lower.includes(keyword))
-            );
-            return match?.reply ?? 'Gracias por escribirnos. Un asesor se pondrá en contacto contigo pronto.';
-        },
-        bindToggle() {
-            const chatbotWrapper = document.querySelector('.chatbot-wrapper');
-            if (!chatbotWrapper) return;
-
-            const messagesContainer = chatbotWrapper.querySelector('[data-chatbot-messages]');
-            const form = chatbotWrapper.querySelector('[data-chatbot-form]');
-            const input = chatbotWrapper.querySelector('[data-chatbot-input]');
-
-            if (!form || !messagesContainer || !input) return;
-
-            if (this.history().length === 0) {
-                this.addMessage({
-                    sender: 'bot',
-                    text: '¡Hola! Soy PrintBot 🤖. Puedo ayudarte con horarios, métodos de pago o información de cursos y productos.',
-                });
-            }
-
-            const renderMessages = () => {
-                const history = this.history();
-                messagesContainer.innerHTML = '';
-                history.forEach(message => {
-                    const wrapper = document.createElement('div');
-                    wrapper.className = `d-flex mb-3 ${message.sender === 'user' ? 'justify-content-end' : ''}`;
-                    wrapper.innerHTML = `
-                        <div class="p-3 rounded-3 shadow-sm ${message.sender === 'user' ? 'bg-primary text-white' : 'bg-white border'}"
-                             style="max-width: 85%;">
-                            <p class="mb-1 small fw-semibold">${message.sender === 'user' ? 'Tú' : 'PrintBot'}</p>
-                            <p class="mb-0 small">${message.text}</p>
-                        </div>
-                    `;
-                    messagesContainer.appendChild(wrapper);
-                });
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            };
-
-            renderMessages();
-
-            form.addEventListener('submit', event => {
-                event.preventDefault();
-                const text = input.value.trim();
-                if (!text) return;
-                this.addMessage({ sender: 'user', text });
-                const reply = this.reply(text);
-                this.addMessage({ sender: 'bot', text: reply });
-                input.value = '';
-                renderMessages();
-            });
         },
     },
 
