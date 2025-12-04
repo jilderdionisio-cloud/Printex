@@ -40,7 +40,11 @@
     display: flex;
     flex-direction: column;
 }
-.printbot-window.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.printbot-window.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
 .printbot-header {
     background: linear-gradient(135deg, #0033A0, #0a1f52);
     color: #fff;
@@ -61,7 +65,11 @@
     font-weight: 900;
     font-size: 18px;
 }
-.printbot-header h6 { margin: 0; font-weight: 800; letter-spacing: 0.02em; }
+.printbot-header h6 {
+    margin: 0;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
 .printbot-body {
     padding: 12px;
     display: flex;
@@ -78,9 +86,21 @@
     max-width: 90%;
     box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
-.printbot-msg.bot { background: #E0E0E0; color: #0a0a0a; align-self: flex-start; }
-.printbot-msg.user { background: #0033A0; color: #fff; align-self: flex-end; }
-.printbot-quick { display: flex; flex-wrap: wrap; gap: 8px; }
+.printbot-msg.bot {
+    background: #E0E0E0;
+    color: #0a0a0a;
+    align-self: flex-start;
+}
+.printbot-msg.user {
+    background: #0033A0;
+    color: #fff;
+    align-self: flex-end;
+}
+.printbot-quick {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
 .printbot-quick button {
     background: #FFD700;
     color: #0033A0;
@@ -136,7 +156,7 @@
     </div>
     <div class="printbot-body" id="printbotBody">
         <div class="printbot-msg bot">
-            Hola, soy PrintBot. ¿En qué puedo ayudarte?
+            👋 Hola, soy PrintBot 🤖 ¿En qué puedo ayudarte?
         </div>
         <div class="printbot-quick">
             <button data-quick="Ver productos">Ver productos</button>
@@ -159,9 +179,10 @@
     const bodyBox = document.getElementById('printbotBody');
     const input = document.getElementById('printbotInput');
     const sendBtn = document.getElementById('printbotSend');
-    const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
 
-    function openClose() { windowBox.classList.toggle('open'); }
+    function openClose() {
+        windowBox.classList.toggle('open');
+    }
 
     function appendMessage(text, from = 'bot') {
         const msg = document.createElement('div');
@@ -171,44 +192,33 @@
         bodyBox.scrollTop = bodyBox.scrollHeight;
     }
 
-    async function sendMessage() {
+    function botReply(userText) {
+        // Simulación sin backend
+        setTimeout(() => {
+            const replies = {
+                'ver productos': 'Puedes ver nuestros productos en la sección Productos.',
+                'ver cursos': 'Consulta los cursos disponibles en la sección Cursos.',
+                'métodos de pago': 'Aceptamos tarjetas, transferencias y pagos en línea.',
+                'seguimiento de pedido': 'Para seguimiento, comparte tu número de pedido.',
+                'contacto': 'Puedes escribirnos a soporte@printex.com o usar el formulario de contacto.'
+            };
+            const key = userText.trim().toLowerCase();
+            appendMessage(replies[key] || 'Gracias por tu mensaje, pronto te responderé con más detalles.', 'bot');
+        }, 500);
+    }
+
+    function sendMessage() {
         const text = input.value.trim();
         if (!text) return;
         appendMessage(text, 'user');
         input.value = '';
-
-        const thinking = document.createElement('div');
-        thinking.className = 'printbot-msg bot';
-        thinking.textContent = 'PrintBot está pensando...';
-        bodyBox.appendChild(thinking);
-        bodyBox.scrollTop = bodyBox.scrollHeight;
-
-        try {
-            const res = await fetch('/chatbot', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrf,
-                },
-                body: JSON.stringify({ message: text }),
-            });
-            if (!res.ok) {
-                throw new Error('Respuesta no válida');
-            }
-            const data = await res.json();
-            thinking.remove();
-            appendMessage(data.reply || '¿Te ayudo con productos, cursos, pagos o pedidos?', 'bot');
-        } catch (err) {
-            thinking.remove();
-            appendMessage('¿Te ayudo con productos, cursos, pagos o pedidos?', 'bot');
-        }
+        botReply(text);
     }
 
     toggle.addEventListener('click', openClose);
     sendBtn.addEventListener('click', sendMessage);
     input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
-            e.preventDefault();
             sendMessage();
         }
     });
