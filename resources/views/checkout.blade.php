@@ -72,7 +72,14 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="form-label">Teléfono</label>
-                            <input type="tel" class="form-control" name="shipping_phone" value="{{ old('shipping_phone', $user->phone ?? '') }}">
+                            <input type="tel"
+                                   class="form-control"
+                                   name="shipping_phone"
+                                   minlength="9"
+                                   maxlength="9"
+                                   pattern="\d{9}"
+                                   inputmode="numeric"
+                                   value="{{ old('shipping_phone', $user->phone ?? '') }}">
                         </div>
                         <div class="col-12">
                             <label class="form-label">Dirección completa *</label>
@@ -141,6 +148,7 @@
                         <label class="form-label" id="paymentExtraLabel">Referencia del pago</label>
                         <input type="text" name="payment_reference" id="paymentExtraInput"
                                class="form-control"
+                               inputmode="numeric"
                                placeholder="Completa según el método seleccionado">
                     </div>
 
@@ -166,17 +174,28 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateField(method) {
         input.required = false;
         input.value = '';
+        input.removeAttribute('minlength');
+        input.removeAttribute('maxlength');
+        input.removeAttribute('pattern');
+        input.setAttribute('inputmode', 'numeric');
         if (method === 'Yape' || method === 'Plin') {
             label.textContent = `Número de ${method}`;
             input.placeholder = 'Número de celular asociado';
             input.required = true;
+            input.setAttribute('minlength', '9');
+            input.setAttribute('maxlength', '9');
+            input.setAttribute('pattern', '^[0-9]{9}$');
         } else if (method === 'Visa' || method === 'Mastercard') {
             label.textContent = 'Número de tarjeta';
             input.placeholder = '**** **** **** 1234';
             input.required = true;
+            input.setAttribute('minlength', '16');
+            input.setAttribute('maxlength', '16');
+            input.setAttribute('pattern', '^[0-9]{16}$');
         } else {
             label.textContent = 'Referencia del pago';
             input.placeholder = 'Referencia o código (opcional)';
+            input.setAttribute('inputmode', 'text');
         }
     }
 

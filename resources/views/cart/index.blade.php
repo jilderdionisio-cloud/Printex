@@ -128,10 +128,15 @@
                     </span>
                 </div>
 
-                <a href="{{ route('checkout.index') }}" class="btn btn-primary w-100" style="background-color:#1e40af;"
-                   @if ($cartCollection->isEmpty()) disabled @endif>
-                    Proceder al pago
-                </a>
+                @if ($cartCollection->isEmpty())
+                    <button class="btn btn-primary w-100" style="background-color:#1e40af;" disabled>
+                        Añade un producto para continuar
+                    </button>
+                @else
+                    <a href="{{ route('checkout.index') }}" class="btn btn-primary w-100" style="background-color:#1e40af;">
+                        Proceder al pago
+                    </a>
+                @endif
 
                 <div class="mt-3 text-center text-muted small">
                     * Tus productos se reservan por 15 minutos.

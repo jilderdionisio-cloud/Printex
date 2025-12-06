@@ -30,6 +30,7 @@
                     <thead class="text-muted small text-uppercase">
                         <tr>
                             <th>ID</th>
+                            <th>Productos</th>
                             <th>Fecha</th>
                             <th>Metodo de pago</th>
                             <th class="text-center">Estado</th>
@@ -41,7 +42,20 @@
                         @foreach ($orders as $order)
                             <tr>
                                 <td>{{ $order->id }}</td>
-                                <td>{{ $order->created_at?->format('d/m/Y H:i') }}</td>
+                                <td class="small">
+                                    @forelse ($order->items as $item)
+                                        @php
+                                            $itemName = $item->name
+                                                ?? $item->product->name
+                                                ?? $item->course->name
+                                                ?? 'Item';
+                                        @endphp
+                                        <div>{{ $itemName }}</div>
+                                    @empty
+                                        <div class="text-muted">Sin productos</div>
+                                    @endforelse
+                                </td>
+                                <td>{{ $order->created_at?->format('d/m/Y') }}</td>
                                 <td>{{ ucfirst($order->payment_method ?? 'N/D') }}</td>
                                 <td class="text-center">
                                     <span class="badge text-dark

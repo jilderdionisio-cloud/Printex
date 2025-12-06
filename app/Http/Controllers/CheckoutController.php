@@ -99,7 +99,7 @@ class CheckoutController extends Controller
 
         session()->forget('cart');
 
-        return redirect()->route('orders.index')->with('status', 'Pago exitoso. Tu pedido esta en camino.');
+        return redirect()->route('checkout.index')->with('status', 'Pago exitoso. Tu pedido está en camino.');
     }
 
     private function summary(array $cart): array

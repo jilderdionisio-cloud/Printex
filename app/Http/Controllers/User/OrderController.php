@@ -13,7 +13,7 @@ class OrderController extends Controller
     {
         $orders = Order::with(['items.product', 'items.course', 'user'])
             ->where('user_id', $request->user()->id)
-            ->latest()
+            ->orderBy('id')
             ->paginate(10);
 
         return view('orders.index', compact('orders'));

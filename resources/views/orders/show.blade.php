@@ -147,10 +147,7 @@
         </div>
     </div>
 
-    <div class="d-flex justify-content-between mt-4">
+    <div class="d-flex justify-content-start mt-4">
         <a href="{{ route('orders.index') }}" class="btn btn-outline-secondary">Volver</a>
-        <button class="btn btn-primary" style="background-color:#1e40af;">
-            Descargar comprobante
-        </button>
     </div>
 @endsection
