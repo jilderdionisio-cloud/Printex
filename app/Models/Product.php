@@ -55,28 +55,42 @@ class Product extends Model
         return $query->orderByDesc('purchase_count')->take($limit);
     }
 
+    /**
+     * Intenta 4 métodos diferentes para asegurar que la imagen sea accesible
+     */
     public function getImageUrlAttribute(): ?string
     {
+        // PASO 1: ¿Tiene imagen?
         if (! $this->image) {
-            return null;
+            return null;  // Sin imagen → null
         }
 
+        // PASO 2: ¿Es URL externa (http://, https://)?
         if (Str::startsWith($this->image, ['http://', 'https://'])) {
             return $this->image;
         }
 
+
+        // Este es el caso normal: public/storage → storage/app/public/
         $publicPath = public_path('storage/' . $this->image);
         if (file_exists($publicPath)) {
-            return asset('storage/' . $this->image);
+            return asset('storage/' . $this->image);  // Devuelve URL: http://localhost:8000/storage/...
         }
 
+
+        // Si el symlink está roto, convierte imagen a base64 (data:uri)
         if (Storage::disk('public')->exists($this->image)) {
             $disk = Storage::disk('public');
+            
+        
+            // Si no puede detectar el tipo → usa 'image/jpeg' por defecto
             $mime = $disk->mimeType($this->image) ?: 'image/jpeg';
 
+            // Lee contenido binario → codifica a base64 → retorna en formato data:uri
             return 'data:' . $mime . ';base64,' . base64_encode($disk->get($this->image));
         }
 
+        // PASO 5: No existe en ningún lado → null
         return null;
     }
 }

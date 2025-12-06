@@ -3,6 +3,62 @@
 @section('title', 'Productos | Admin')
 
 @section('content')
+    <style>
+        .admin-card {
+            border: none;
+            box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+            border-radius: 20px;
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+            border: 1px solid #e2e8f0;
+        }
+        .admin-table thead th {
+            background: linear-gradient(90deg, #dbeafe 0%, #c7d2fe 100%);
+            color: #0f172a;
+            border: none;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .admin-table tbody tr {
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .admin-table tbody tr:hover {
+            background: #eef2ff;
+        }
+        .btn-soft-primary {
+            background: #dbeafe;
+            color: #1e40af;
+            border: none;
+            box-shadow: 0 6px 12px rgba(30, 64, 175, 0.15);
+        }
+        .btn-soft-primary:hover {
+            background: #bfdbfe;
+            color: #1e3a8a;
+        }
+        .btn-soft-danger {
+            background: #ffe4e6;
+            color: #be123c;
+            border: none;
+            box-shadow: 0 6px 12px rgba(190, 18, 60, 0.12);
+        }
+        .btn-soft-danger:hover {
+            background: #fecdd3;
+            color: #9f1239;
+        }
+        .badge-neutral {
+            background: #e2e8f0;
+            color: #0f172a;
+            border-radius: 10px;
+            padding: 6px 12px;
+            font-weight: 600;
+        }
+        .filters-bar {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+        }
+    </style>
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
         <div>
             <h1 class="fw-bold mb-1">Productos</h1>
@@ -13,11 +69,11 @@
         </a>
     </div>
 
-    <div class="card border-0 shadow-sm">
+    <div class="card admin-card">
         <div class="card-body">
-            <form method="GET" class="row g-3 mb-3">
+            <form method="GET" class="row g-3 mb-3 filters-bar">
                 <div class="col-12 col-md-4">
-                    <input type="text" class="form-control" placeholder="Buscar por nombre…" name="search" value="{{ request('search') }}">
+                    <input type="text" class="form-control" placeholder="Buscar por nombre…” name="search" value="{{ request('search') }}">
                 </div>
                 <div class="col-12 col-md-3">
                     <select class="form-select" name="category">
@@ -43,7 +99,7 @@
             </form>
 
             <div class="table-responsive">
-                <table class="table align-middle">
+                <table class="table align-middle admin-table">
                     <thead class="text-muted small text-uppercase">
                         <tr>
                             <th>ID</th>
@@ -66,12 +122,12 @@
                                 <td class="text-center">{{ $product->stock }}</td>
                                 <td class="text-end">
                                     <div class="btn-group btn-group-sm">
-                                        <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-outline-secondary">Editar</a>
+                                        <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-soft-primary">Editar</a>
                                         <form action="{{ route('admin.products.destroy', $product) }}" method="POST"
                                               onsubmit="return confirm('¿Eliminar producto?');">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+                                            <button type="submit" class="btn btn-soft-danger">Eliminar</button>
                                         </form>
                                     </div>
                                 </td>
