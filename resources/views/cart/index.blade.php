@@ -146,7 +146,7 @@
             <div class="bg-light rounded-4 p-4 mt-3">
                 <h6 class="text-uppercase text-muted small">Métodos aceptados</h6>
                 <div class="d-flex gap-3">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Visa_2014_logo_detail.svg" alt="Visa" height="24">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa" height="24">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png" alt="Mastercard" height="24">
                     <span class="badge text-bg-warning text-dark" style="background-color:#f59e0b !important;">Yape</span>
                     <span class="badge text-bg-warning text-dark" style="background-color:#f59e0b !important;">Plin</span>
