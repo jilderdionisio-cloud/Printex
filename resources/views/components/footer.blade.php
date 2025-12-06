@@ -5,7 +5,7 @@
             <div class="badge bg-warning text-dark mb-3 px-3 py-2 fw-semibold">Estudio creativo de estampado</div>
             <h4 class="fw-bold mb-2">¿Listo para Empezar?</h4>
             <p class="mb-4">Únete a cientos de emprendedores que confían en PRINTEX para su negocio de diseño y sublimación.</p>
-            <a href="{{ route('about') }}" class="btn btn-printex fw-semibold px-4">Contáctanos ahora</a>
+            <a href="{{ route('about') }}" class="btn btn-printex fw-semibold px-4" style="color:#fff;">🤝 Contáctanos ahora</a>
         </div>
     </div>
 

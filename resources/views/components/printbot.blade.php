@@ -75,6 +75,7 @@
     border-radius: 12px;
     font-size: 14px;
     line-height: 1.4;
+    white-space: pre-line;
     max-width: 90%;
     box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
@@ -160,6 +161,12 @@
     const input = document.getElementById('printbotInput');
     const sendBtn = document.getElementById('printbotSend');
     const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
+    // Quitar mensaje inicial si existe
+    const initialBot = bodyBox.querySelector('.printbot-msg.bot');
+    if (initialBot) {
+        initialBot.remove();
+    }
 
     function openClose() { windowBox.classList.toggle('open'); }
 

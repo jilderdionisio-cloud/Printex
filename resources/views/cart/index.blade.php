@@ -82,7 +82,7 @@
                                                 <form method="POST" action="{{ route('cart.update', $itemKey) }}" class="d-inline-flex align-items-center gap-2">
                                                     @csrf
                                                     @method('PUT')
-                                                    <input type="number" name="quantity" min="1" max="{{ $model->stock ?? 99 }}"
+                                                    <input type="number" name="quantity" min="1" max="{{ $model->stock ?? 99 }}" step="1"
                                                            value="{{ $quantity }}" class="form-control form-control-sm text-center"
                                                            style="width:80px;">
                                                     <button type="submit" class="btn btn-sm btn-outline-secondary">Actualizar</button>
@@ -150,3 +150,23 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('input[name="quantity"]').forEach(input => {
+        const minVal = parseInt(input.getAttribute('min')) || 1;
+        const maxAttr = parseInt(input.getAttribute('max'));
+        const hasMax = !Number.isNaN(maxAttr);
+        const clamp = () => {
+            let val = parseInt(input.value, 10);
+            if (Number.isNaN(val) || val < minVal) val = minVal;
+            if (hasMax && val > maxAttr) val = maxAttr;
+            input.value = val;
+        };
+        input.addEventListener('input', clamp);
+        input.addEventListener('change', clamp);
+    });
+});
+</script>
+@endpush

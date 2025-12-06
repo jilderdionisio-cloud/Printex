@@ -17,7 +17,7 @@ class CourseController extends Controller
    // Ver la lista de cursos
     public function index(): View
     {
-        $courses = Course::latest()->paginate(15);
+        $courses = Course::orderBy('id')->paginate(15);
 
         return view('admin.courses.index', compact('courses'));
     }

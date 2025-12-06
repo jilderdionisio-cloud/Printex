@@ -32,7 +32,7 @@ class ProductController extends Controller
                 ->when($sort === 'price_asc', fn ($q) => $q->orderBy('price'))
                 ->when($sort === 'stock_desc', fn ($q) => $q->orderByDesc('stock'));
         } else {
-            $query->latest();
+            $query->orderBy('id'); // orden ascendente por ID
         }
 
         $products = $query->paginate(15)->withQueryString();

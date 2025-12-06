@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use OpenAI;
 use App\Models\Product;
 use App\Models\Course;
+use App\Models\ChatLog;
 
 class ChatbotController extends Controller
 {
@@ -18,70 +19,87 @@ class ChatbotController extends Controller
         $userMessage = $request->input('message');
         $lower = mb_strtolower($userMessage);
 
-        // Detectar intención de lista vs. detalle
+        // Logger helper
+        $logReply = function (string $intent, string $reply, array $meta = []) use ($userMessage) {
+            try {
+                ChatLog::create([
+                    'user_id' => auth()->id(),
+                    'intent' => $intent,
+                    'message' => $userMessage,
+                    'reply' => $reply,
+                    'meta' => $meta,
+                ]);
+            } catch (\Throwable $e) {
+                // ignore log errors
+            }
+            return response()->json(['reply' => $reply]);
+        };
+
+        // Detect list vs detail
         $wantsList = (
             (str_contains($lower, 'lista') || str_contains($lower, 'listar') || str_contains($lower, 'ver') || str_contains($lower, 'mostrar'))
             && (str_contains($lower, 'curso') || str_contains($lower, 'cursos') || str_contains($lower, 'producto') || str_contains($lower, 'productos'))
         );
 
         $wantsDetail = (
-            (str_contains($lower, 'detalle') || str_contains($lower, 'información') || str_contains($lower, 'informacion') ||
-             str_contains($lower, 'incluye') || str_contains($lower, 'cuánto') || str_contains($lower, 'cuanto') ||
+            (str_contains($lower, 'detalle') || str_contains($lower, 'informacion') || str_contains($lower, 'información') ||
+             str_contains($lower, 'incluye') || str_contains($lower, 'cuanto') || str_contains($lower, 'cuánto') ||
              str_contains($lower, 'instructor') || str_contains($lower, 'stock') || str_contains($lower, 'cupos') || preg_match('/\d/', $lower))
             && (str_contains($lower, 'curso') || str_contains($lower, 'producto'))
         );
 
-        // Respuesta directa de contacto
+        // Contacto directo
         if (
-            str_contains($lower, 'teléfono') ||
             str_contains($lower, 'telefono') ||
+            str_contains($lower, 'teléfono') ||
             str_contains($lower, 'numero') ||
             str_contains($lower, 'número') ||
             str_contains($lower, 'contacto')
         ) {
-            return response()->json([
-                'reply' => 'Puedes llamarnos o escribirnos al +51 999 888 777. También por email: ventas@printex.com'
-            ]);
+            $reply = 'Puedes llamarnos o escribirnos al +51 999 888 777. Tambien por email: ventas@printex.com';
+            return $logReply('contact', $reply);
         }
 
-        // Respuesta directa de productos: listado simple (solo si no es detalle)
+        // Listado de productos (solo nombres + precios)
         if ($wantsList && !$wantsDetail && (str_contains($lower, 'producto') || str_contains($lower, 'productos'))) {
             $items = Product::orderByDesc('created_at')
                 ->take(8)
                 ->get()
                 ->values()
-                ->map(function ($p) {
+                ->map(function ($p, $idx) {
                     $price = $p->price ?? 0;
-                    return '- ' . $p->name . ' — S/ ' . number_format($price, 2);
+                    $bullet = '•'; // bullet para legibilidad
+                    return $bullet . ' ' . ($idx + 1) . ') ' . $p->name . ' - S/ ' . number_format($price, 2);
                 })
                 ->implode("\n");
 
-            return response()->json([
-                'reply' => $items !== ''
-                    ? "Aquí tienes productos disponibles:\n{$items}"
-                    : 'No tengo productos para mostrar ahora.'
-            ]);
+            $reply = $items !== ''
+                ? "Aqui tienes productos disponibles:\n{$items}"
+                : 'No tengo productos para mostrar ahora.';
+
+            return $logReply('list_products', $reply);
         }
 
-        // Respuesta directa de cursos: listado simple (solo si no es detalle)
+        // Listado de cursos (solo nombres + precios + horas)
         if ($wantsList && !$wantsDetail && (str_contains($lower, 'curso') || str_contains($lower, 'cursos'))) {
             $courses = Course::orderByDesc('created_at')
                 ->take(8)
                 ->get()
                 ->values()
-                ->map(function ($c) {
+                ->map(function ($c, $idx) {
                     $price = $c->price ?? 0;
                     $durVal = $c->duration ?? $c->duration_hours ?? null;
                     $dur = $durVal ? " ({$durVal}h)" : '';
-                    return '- ' . $c->name . ' — S/ ' . number_format($price, 2) . $dur;
+                    $bullet = '•';
+                    return $bullet . ' ' . ($idx + 1) . ') ' . $c->name . ' - S/ ' . number_format($price, 2) . $dur;
                 })
                 ->implode("\n");
 
-            return response()->json([
-                'reply' => $courses !== ''
-                    ? "Aquí tienes cursos disponibles:\n{$courses}"
-                    : 'No tengo cursos para mostrar ahora.'
-            ]);
+            $reply = $courses !== ''
+                ? "Aqui tienes cursos disponibles:\n{$courses}"
+                : 'No tengo cursos para mostrar ahora.';
+
+            return $logReply('list_courses',        $reply);
         }
 
         // Detalles de cursos
@@ -98,11 +116,10 @@ class ChatbotController extends Controller
 
             if (! $target) {
                 $sugerencias = $all->take(3)->pluck('name')->implode(', ');
-                return response()->json([
-                    'reply' => $sugerencias !== ''
-                        ? "No encontré ese curso. Algunos disponibles: {$sugerencias}"
-                        : 'No encontré cursos para mostrar.'
-                ]);
+                $reply = $sugerencias !== ''
+                    ? "No encontre ese curso. Algunos disponibles: {$sugerencias}"
+                    : 'No encontre cursos para mostrar.';
+                return $logReply('course_not_found', $reply, ['asked' => $userMessage]);
             }
 
             $durVal = $target->duration ?? $target->duration_hours ?? null;
@@ -111,28 +128,26 @@ class ChatbotController extends Controller
             $modalidad = $target->modality ?? 'No especificada';
             $instructor = $target->instructor ?? 'No especificado';
             $cupos = $target->slots ?? $target->available_slots ?? 'No especificado';
-            $desc = $target->description ?? 'Sin descripción';
+            $desc = $target->description ?? 'Sin descripcion';
 
             $alternativas = $all->where('id', '!=', $target->id)->take(2)->pluck('name')->values();
 
-            $reply = "⭐ Recomendación principal\n"
+            $reply = "Recomendacion principal\n"
                 . "- Nombre: {$target->name}\n"
                 . "- Precio: S/ " . number_format($price, 2) . "\n"
                 . "- Modalidad: {$modalidad}\n"
                 . "- Instructor: {$instructor}\n"
                 . "- Cupos: {$cupos}\n"
-                . "- Duración: {$dur}\n"
-                . "- Descripción: {$desc}";
+                . "- Duracion: {$dur}\n"
+                . "- Descripcion: {$desc}";
 
             if ($alternativas->isNotEmpty()) {
-                $reply .= "\n🔁 Alternativas: " . $alternativas->implode(' | ');
+                $reply .= "\nAlternativas: " . $alternativas->implode(' | ');
             }
 
-            $reply .= "\n💡 Tip final: Si quieres inscribirte, indícame el curso y te explico cómo hacerlo.";
+            $reply .= "\nTip final: Si quieres inscribirte, indicame el curso y te explico como hacerlo.";
 
-            return response()->json([
-                'reply' => $reply,
-            ]);
+            return $logReply('course_detail', $reply, ['course_id' => $target->id ?? null]);
         }
 
         // Detalles de productos
@@ -149,52 +164,56 @@ class ChatbotController extends Controller
 
             if (! $target) {
                 $sugerencias = $all->take(3)->pluck('name')->implode(', ');
-                return response()->json([
-                    'reply' => $sugerencias !== ''
-                        ? "No encontré ese producto. Algunos disponibles: {$sugerencias}"
-                        : 'No encontré productos para mostrar.'
-                ]);
+                $reply = $sugerencias !== ''
+                    ? "No encontre ese producto. Algunos disponibles: {$sugerencias}"
+                    : 'No encontre productos para mostrar.';
+                return $logReply('product_not_found', $reply, ['asked' => $userMessage]);
             }
 
             $price = $target->price ?? 0;
             $stock = $target->stock ?? 'No especificado';
-            $desc = $target->description ?? 'Sin descripción';
-            $category = $target->category->name ?? 'Sin categoría';
+            $desc = $target->description ?? 'Sin descripcion';
+            $category = $target->category->name ?? 'Sin categoria';
 
             $alternativas = $all->where('id', '!=', $target->id)->take(2)->pluck('name')->values();
 
-            $reply = "⭐ Recomendación principal\n"
+            $reply = "Recomendacion principal\n"
                 . "- Nombre: {$target->name}\n"
                 . "- Precio: S/ " . number_format($price, 2) . "\n"
-                . "- Categoría: {$category}\n"
+                . "- Categoria: {$category}\n"
                 . "- Stock: {$stock}\n"
-                . "- Descripción: {$desc}";
+                . "- Descripcion: {$desc}";
 
             if ($alternativas->isNotEmpty()) {
-                $reply .= "\n🔁 Alternativas: " . $alternativas->implode(' | ');
+                $reply .= "\nAlternativas: " . $alternativas->implode(' | ');
             }
 
-            $reply .= "\n💡 Tip final: Si quieres comprarlo, añade al carrito y finaliza el pago.";
+            $reply .= "\nTip final: Si quieres comprarlo, anade al carrito y finaliza el pago.";
 
-            return response()->json([
-                'reply' => $reply,
-            ]);
+            return $logReply('product_detail', $reply, ['product_id' => $target->id ?? null]);
         }
 
-        // Inscripción: no inscribir realmente
+        // Inscripcion: no inscribir realmente
         if (str_contains($lower, 'inscrib') && str_contains($lower, 'curso')) {
-            return response()->json([
-                'reply' => 'Dime el nombre del curso y te explico cómo inscribirte en la plataforma. No puedo inscribirte directamente desde aquí.'
-            ]);
+            $reply = 'Dime el nombre del curso y te explico como inscribirte en la plataforma. No puedo inscribirte directamente desde aqui.';
+            return $logReply('inscripcion', $reply);
         }
 
-        // Intentos rápidos (fallback) sin BD
+        // Si el tema no parece relacionado con productos/cursos/pagos/pedidos/contacto, responde que no hay info
+        $temasClave = ['producto','productos','curso','cursos','pago','pagos','pedido','pedidos','contacto','inscrib'];
+        $esTemaRelacionado = collect($temasClave)->contains(fn($k) => str_contains($lower, $k));
+        if (! $esTemaRelacionado) {
+            $reply = 'Solo puedo ayudarte con productos, cursos, pagos, pedidos o contacto de Printex.';
+            return $logReply('fuera_de_tema', $reply);
+        }
+
+        // Intentos rapidos (fallback) sin BD
         $fallbacks = [
-            'producto' => 'Puedes ver los productos en la sección Productos. Si buscas algo específico, dime cuál.',
-            'curso' => 'Consulta los cursos en la sección Cursos. Si quieres recomendación, dime qué te interesa aprender.',
+            'producto' => 'Puedes ver los productos en la seccion Productos. Si buscas algo especifico, dime cual.',
+            'curso' => 'Consulta los cursos en la seccion Cursos. Si quieres recomendacion, dime que te interesa aprender.',
             'pago' => 'Aceptamos tarjeta, Yape/Plin y transferencia.',
-            'pedido' => 'Para seguimiento de pedido, indícame el número de pedido y te confirmo el estado.',
-            'contacto' => 'Escríbenos a soporte@printex.com o llama al +51 999 888 777.',
+            'pedido' => 'Para seguimiento de pedido, indicame el numero de pedido y te confirmo el estado.',
+            'contacto' => 'Escribenos a soporte@printex.com o llama al +51 999 888 777.',
         ];
 
         try {
@@ -203,7 +222,7 @@ class ChatbotController extends Controller
             $response = $client->chat()->create([
                 'model' => env('OPENAI_MODEL'),
                 'messages' => [
-                    ['role' => 'system', 'content' => 'Eres PrintBot, un asistente breve y útil para clientes de Printex. Responde en español con un máximo de 2 oraciones.'],
+                    ['role' => 'system', 'content' => 'Eres PrintBot, un asistente breve y util para clientes de Printex. Responde en espanol con un maximo de 2 oraciones.'],
                     ['role' => 'user', 'content' => $userMessage],
                 ],
             ]);
@@ -211,16 +230,16 @@ class ChatbotController extends Controller
             $reply = data_get($response, 'choices.0.message.content');
 
             if (! $reply) {
-                throw new \RuntimeException('Respuesta vacía del modelo');
+                throw new \RuntimeException('Respuesta vacia del modelo');
             }
 
-            return response()->json(['reply' => $reply]);
+            return $logReply('openai', $reply);
         } catch (\Throwable $e) {
             $reply = collect($fallbacks)->first(function ($text, $key) use ($lower) {
                 return str_contains($lower, $key);
-            }) ?? 'Puedo ayudarte con productos, cursos, pagos o pedidos. ¿Qué necesitas?';
+            }) ?? 'Puedo ayudarte con productos, cursos, pagos o pedidos. Que necesitas?';
 
-            return response()->json(['reply' => $reply]);
+            return $logReply('fallback', $reply, ['error' => $e->getMessage()]);
         }
     }
 }

@@ -31,9 +31,10 @@
         position: absolute;
         inset: 0;
         display: flex;
-        align-items: flex-end;
+        align-items: center;
         justify-content: flex-start;
-        padding: 0 3rem 3rem;
+        padding: 1rem 3rem 1.5rem;
+        padding-left: 6.5rem; /* corre ~3 cm hacia la derecha */
     }
     .hero-inner {
         max-width: 820px;

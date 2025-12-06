@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg printex-navbar fixed-top py-3 shadow-sm">
     <div class="container">
-        <a class="navbar-brand d-flex align-items-center gap-3 text-decoration-none" href="{{ url('/') }}">
+        <a class="navbar-brand d-flex align-items-center gap-3 text-decoration-none" href="{{ url('/') }}" style="margin-left:-2.5rem;">
             <span class="printex-logo-mark">P</span>
             <div class="d-flex flex-column text-white text-uppercase">
                 <span class="printex-brand-title fw-bold">PRINTEX</span>
@@ -15,7 +15,7 @@
 
         <div class="collapse navbar-collapse" id="printexNavbar">
             <div class="d-lg-flex align-items-center w-100 mt-3 mt-lg-0">
-                <ul class="navbar-nav mx-lg-auto text-center align-items-lg-center">
+                <ul class="navbar-nav text-center align-items-lg-center gap-4" style="margin-left:18.5rem;">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url('/') }}">Inicio</a>
                     </li>
@@ -30,7 +30,7 @@
                     </li>
                 </ul>
 
-            <div class="d-flex align-items-center justify-content-center justify-content-lg-end gap-3 ms-lg-4 mt-3 mt-lg-0">
+            <div class="d-flex align-items-center justify-content-center justify-content-lg-end gap-3 ms-lg-4 ms-lg-auto mt-3 mt-lg-0" style="margin-right:2.5rem; margin-left:3rem;">
                 @php
                     $cartCount = collect(session('cart', []))->sum(fn ($item) => $item['quantity'] ?? 0);
                 @endphp
